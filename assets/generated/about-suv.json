@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-25T05:42:10.331687Z",
+    "display_name": "GPT Image 2",
+    "id": "fb709026-d1cf-4a5b-a020-18958dbedcab",
+    "job_type": "gpt_image_2",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261025_054210_fb709026-d1cf-4a5b-a020-18958dbedcab_min.webp",
+    "params": {
+      "aspect_ratio": "4:3",
+      "height": 1744,
+      "medias": [],
+      "model": "videotape-alpha",
+      "prompt": "Photorealistic lifestyle automotive photography, cinematic. A family SUV with its tailgate open at a Western Australian beach at late afternoon, Indian Ocean and white sand, soft warm-cool light, picnic blankets and beach gear in the boot, no people visible, moody colour grade with deep tones. No badges, no logos, no text, blank number plate. 4:3.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "width": 2336
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261025_054210_fb709026-d1cf-4a5b-a020-18958dbedcab.png",
+    "status": "completed"
+  }
+]

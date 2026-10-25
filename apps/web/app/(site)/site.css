@@ -1,0 +1,200 @@
+/*
+ * Public-site motion + signature styles (Public site agent).
+ * Plain CSS on top of the Foundation tokens in app/globals.css (not edited). Imported by app/(site)/layout.tsx.
+ * Every animation enhances an already-visible default and has a reduced-motion alternative.
+ */
+
+:root {
+  --sda-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --sda-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --sda-header-h: 4.5rem;
+}
+
+/* ---- Tapered red blade: the logo's "— AUTO —" bars, used as the section kicker mark ---- */
+.sda-blade {
+  display: inline-block;
+  width: 1.75rem;
+  height: 0.25rem;
+  flex: none;
+  background: var(--brand-red);
+  clip-path: polygon(0 50%, 22% 0, 100% 0, 100% 100%, 22% 100%);
+}
+.sda-blade-rev {
+  clip-path: polygon(0 0, 78% 0, 100% 50%, 78% 100%, 0 100%);
+}
+
+/* ---- Giant footer wordmark: brushed chrome, echoing the logo lettering (deliberate, single use) ---- */
+.sda-wordmark {
+  font-family: var(--font-archivo), system-ui, sans-serif;
+  font-weight: 900;
+  font-stretch: 125%;
+  font-style: italic;
+  letter-spacing: -0.03em;
+  line-height: 0.8;
+  white-space: nowrap;
+  background:
+    linear-gradient(180deg, #ffffff 0%, #e4e6ea 30%, #8b8f97 52%, #d9dce0 58%, #6e727a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  user-select: none;
+}
+
+/* ---- Odometer-style numerals ---- */
+.sda-num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Hero entrance (CSS so it runs off the main thread and never gates visibility) ---- */
+@keyframes sda-line-in {
+  from {
+    transform: translateY(105%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes sda-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes sda-settle {
+  from {
+    transform: scale(1.07);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@keyframes sda-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes sda-sweep {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.sda-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+.sda-line > span {
+  display: block;
+  animation: sda-line-in 900ms var(--sda-ease-out) both;
+  animation-delay: calc(120ms + var(--i, 0) * 90ms);
+}
+.sda-rise {
+  animation: sda-rise 700ms var(--sda-ease-out) both;
+  animation-delay: var(--d, 0ms);
+}
+.sda-settle {
+  animation: sda-settle 2400ms var(--sda-ease-out) both;
+}
+.sda-sweep {
+  transform-origin: left center;
+  animation: sda-sweep 900ms var(--sda-ease-out) both;
+  animation-delay: var(--d, 300ms);
+}
+/* Re-keyed grids (tabs, filters) – short staggered fade-up per item */
+.sda-stagger > * {
+  animation: sda-rise 420ms var(--sda-ease-out) both;
+}
+.sda-stagger > *:nth-child(2) {
+  animation-delay: 40ms;
+}
+.sda-stagger > *:nth-child(3) {
+  animation-delay: 80ms;
+}
+.sda-stagger > *:nth-child(4) {
+  animation-delay: 120ms;
+}
+.sda-stagger > *:nth-child(5) {
+  animation-delay: 160ms;
+}
+.sda-stagger > *:nth-child(n + 6) {
+  animation-delay: 200ms;
+}
+
+/* Pressable feedback */
+.sda-press {
+  transition:
+    transform 160ms var(--sda-ease-out),
+    background-color 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease;
+}
+.sda-press:active {
+  transform: scale(0.97);
+}
+
+/* Image hover zoom inside cards (pointer devices only) */
+.sda-zoom img {
+  transition: transform 700ms var(--sda-ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .group:hover .sda-zoom img {
+    transform: scale(1.04);
+  }
+}
+
+/* Horizontal rails */
+.sda-rail {
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+}
+.sda-rail::-webkit-scrollbar {
+  display: none;
+}
+.sda-rail > * {
+  scroll-snap-align: start;
+}
+
+/* Long-form legal text */
+.sda-prose p {
+  margin-top: 1em;
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+.sda-prose p:first-child {
+  margin-top: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sda-line > span,
+  .sda-settle,
+  .sda-sweep {
+    animation: none;
+  }
+  .sda-rise,
+  .sda-stagger > * {
+    animation: sda-fade 200ms ease both;
+    animation-delay: 0ms;
+  }
+  .sda-press:active {
+    transform: none;
+  }
+  .sda-zoom img {
+    transition: none;
+  }
+  .group:hover .sda-zoom img {
+    transform: none;
+  }
+}

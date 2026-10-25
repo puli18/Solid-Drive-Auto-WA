@@ -1,0 +1,62 @@
+/*
+ * Admin-only refinements (scoped to .sda-admin). Tokens stay in app/globals.css (Foundation);
+ * this file only tunes touch ergonomics, numerals and press feedback for the operations UI.
+ */
+.sda-admin {
+  --admin-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  font-feature-settings: 'cv11', 'ss01';
+}
+
+/* Figures line up in tables, KPIs and money columns. */
+.sda-admin .tabular,
+.sda-admin td,
+.sda-admin [data-slot='badge'] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Press feedback on buttons (not on keyboard focus moves). */
+.sda-admin [data-slot='button'] {
+  transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+  transition-duration: 160ms;
+  transition-timing-function: var(--admin-ease-out);
+}
+.sda-admin [data-slot='button']:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* Touch screens: 44px minimum targets for controls. */
+@media (pointer: coarse) {
+  .sda-admin [data-slot='button']:not([data-size='xs']),
+  .sda-admin [data-slot='input'],
+  .sda-admin [data-slot='select-trigger'] {
+    min-height: 2.75rem;
+  }
+  .sda-admin [data-slot='button'][data-size^='icon'] {
+    min-width: 2.75rem;
+  }
+}
+
+/* Mobile bottom nav clears the home indicator. */
+.sda-admin .pb-safe {
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+}
+
+.sda-admin .page-title {
+  font-family: var(--font-display);
+  font-stretch: 104%;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sda-admin [data-slot='button']:active:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* Lift the root layout's "Preview" badge above the phone bottom bar inside the admin. */
+@media (max-width: 767px) {
+  body:has(.sda-admin [aria-label='Main']) > [role='status'].fixed {
+    bottom: calc(4.25rem + env(safe-area-inset-bottom));
+  }
+}

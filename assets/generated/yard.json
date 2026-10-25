@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-25T05:46:40.964155Z",
+    "display_name": "GPT Image 2",
+    "id": "66826baa-7d26-4b0b-b41d-36f7281738e1",
+    "job_type": "gpt_image_2",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261025_054640_66826baa-7d26-4b0b-b41d-36f7281738e1_min.webp",
+    "params": {
+      "aspect_ratio": "16:9",
+      "height": 1520,
+      "medias": [],
+      "model": "videotape-alpha",
+      "prompt": "Photorealistic architectural/automotive photography. A clean modern used-car yard in Perth, Western Australia at blue hour, rows of assorted late-model cars neatly lined up, a sleek low glass-and-black-steel showroom building with warm interior glow, string lighting, wet-look concrete, deep blue sky, a hint of red accent lighting. No readable signs, no logos, no text, blank number plates.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "width": 2688
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261025_054640_66826baa-7d26-4b0b-b41d-36f7281738e1.png",
+    "status": "completed"
+  }
+]

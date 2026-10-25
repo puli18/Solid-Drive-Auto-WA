@@ -1,0 +1,48 @@
+rules_version = '2';
+
+// Solid Drive Auto WA – Storage rules.
+// receipts/** and sales/**: admin or staff read + upload; deletes admin only.
+// exports/**: admin read only; written by functions only (Admin SDK).
+// Tests: tests/rules/storage.rules.test.ts
+service firebase.storage {
+  match /b/{bucket}/o {
+    function role() { return request.auth != null ? request.auth.token.get('role', '') : ''; }
+    function isAdmin() { return role() == 'admin'; }
+    function isStaff() { return role() == 'admin' || role() == 'staff'; }
+
+    function validReceipt() {
+      return request.resource.size <= 10 * 1024 * 1024
+        && (request.resource.contentType.matches('image/.*') || request.resource.contentType == 'application/pdf');
+    }
+    function validSaleDocument() {
+      return request.resource.size <= 20 * 1024 * 1024
+        && (request.resource.contentType.matches('image/.*')
+          || request.resource.contentType == 'application/pdf'
+          || request.resource.contentType.matches('application/vnd\\.openxmlformats-officedocument\\..*')
+          || request.resource.contentType == 'application/msword');
+    }
+
+    match /receipts/{allPaths=**} {
+      allow read: if isStaff();
+      allow create: if isStaff() && validReceipt();
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
+
+    match /sales/{allPaths=**} {
+      allow read: if isStaff();
+      allow create: if isStaff() && validSaleDocument();
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
+
+    match /exports/{allPaths=**} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

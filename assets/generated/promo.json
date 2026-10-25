@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-25T05:45:21.292349Z",
+    "display_name": "GPT Image 2",
+    "id": "e631f6c9-9431-4342-a4ac-488241ce84b8",
+    "job_type": "gpt_image_2",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261025_054521_e631f6c9-9431-4342-a4ac-488241ce84b8_min.webp",
+    "params": {
+      "aspect_ratio": "21:9",
+      "height": 1152,
+      "medias": [],
+      "model": "videotape-alpha",
+      "prompt": "Photorealistic premium automotive photography, wide banner. A rugged grey-green 4WD wagon with roof rack and snorkel parked in front of a large flat saturated signal-red painted wall (#D7261E), car on the right side of the frame, empty red wall on the left for text, hard directional light with soft shadows, cool chrome highlights. No badges, no logos, no text, blank number plate.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "width": 2688
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261025_054521_e631f6c9-9431-4342-a4ac-488241ce84b8.png",
+    "status": "completed"
+  }
+]

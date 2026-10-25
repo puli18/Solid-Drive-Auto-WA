@@ -1,0 +1,2 @@
+# Cloudflare Pages: single-page app – every unknown path serves index.html (static files win first).
+/* /index.html 200

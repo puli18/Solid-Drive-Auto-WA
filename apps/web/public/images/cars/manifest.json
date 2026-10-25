@@ -1,0 +1,74 @@
+{
+  "car-01.webp": {
+    "make": "Toyota",
+    "model": "Hilux",
+    "colour": "white",
+    "bodyType": "Dual-cab ute"
+  },
+  "car-02.webp": {
+    "make": "Ford",
+    "model": "Ranger",
+    "colour": "grey",
+    "bodyType": "Dual-cab ute"
+  },
+  "car-03.webp": {
+    "make": "Mazda",
+    "model": "CX-5",
+    "colour": "red",
+    "bodyType": "SUV"
+  },
+  "car-04.webp": {
+    "make": "Hyundai",
+    "model": "i30",
+    "colour": "blue",
+    "bodyType": "Hatch"
+  },
+  "car-05.webp": {
+    "make": "Toyota",
+    "model": "RAV4",
+    "colour": "silver",
+    "bodyType": "SUV"
+  },
+  "car-06.webp": {
+    "make": "Kia",
+    "model": "Sportage",
+    "colour": "black",
+    "bodyType": "SUV"
+  },
+  "car-07.webp": {
+    "make": "Mitsubishi",
+    "model": "Triton",
+    "colour": "white",
+    "bodyType": "Dual-cab ute"
+  },
+  "car-08.webp": {
+    "make": "Volkswagen",
+    "model": "Golf",
+    "colour": "white",
+    "bodyType": "Hatch"
+  },
+  "car-09.webp": {
+    "make": "Subaru",
+    "model": "Outback",
+    "colour": "green",
+    "bodyType": "Wagon"
+  },
+  "car-10.webp": {
+    "make": "Nissan",
+    "model": "Patrol",
+    "colour": "black",
+    "bodyType": "4x4"
+  },
+  "car-11.webp": {
+    "make": "Toyota",
+    "model": "Corolla",
+    "colour": "silver",
+    "bodyType": "Sedan"
+  },
+  "car-12.webp": {
+    "make": "Mazda",
+    "model": "Mazda3",
+    "colour": "grey",
+    "bodyType": "Hatch"
+  }
+}

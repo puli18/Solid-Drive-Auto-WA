@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-25T05:40:30.29089Z",
+    "display_name": "GPT Image 2",
+    "id": "d70b7e21-744e-4381-973e-123f800f19ee",
+    "job_type": "gpt_image_2",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261025_054030_d70b7e21-744e-4381-973e-123f800f19ee_min.webp",
+    "params": {
+      "aspect_ratio": "16:9",
+      "height": 2160,
+      "medias": [],
+      "model": "videotape-alpha",
+      "prompt": "Photorealistic premium automotive photography, moody and cinematic. A sleek dark graphite performance coupe, front three-quarter view, parked on the right half of a Western Australian coastal road at dusk, Indian Ocean horizon glowing deep blue and faint amber behind, wet asphalt reflecting a subtle red accent light, cool chrome highlights on the bodywork, deep blacks. The entire left half of the frame is dark empty negative space with road and sea, for a headline. No badges, no logos, no text, blank licence plates. Wide 16:9 composition, shallow depth, film grade, teal-black shadows.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "4k",
+      "width": 3840
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261025_054030_d70b7e21-744e-4381-973e-123f800f19ee.png",
+    "status": "completed"
+  }
+]

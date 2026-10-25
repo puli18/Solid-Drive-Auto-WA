@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-25T05:46:15.513639Z",
+    "display_name": "GPT Image 2",
+    "id": "3298cbb1-6a55-4c5a-a119-f396da18d581",
+    "job_type": "gpt_image_2",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261025_054615_3298cbb1-6a55-4c5a-a119-f396da18d581_min.webp",
+    "params": {
+      "aspect_ratio": "4:3",
+      "height": 1744,
+      "medias": [],
+      "model": "videotape-alpha",
+      "prompt": "Photorealistic premium automotive photography. Close-up crop of the rear three-quarter of a grey performance coupe in a dark studio, taillight and rear haunch, a single red rim light, cool chrome highlights, deep blacks, cinematic. No badges, no logos, no text, blank number plate.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "width": 2336
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261025_054615_3298cbb1-6a55-4c5a-a119-f396da18d581.png",
+    "status": "completed"
+  }
+]

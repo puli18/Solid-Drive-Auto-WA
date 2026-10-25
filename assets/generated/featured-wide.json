@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-25T05:45:33.047436Z",
+    "display_name": "GPT Image 2",
+    "id": "c38103e0-7436-474f-bb7f-eeaff4ae4b7c",
+    "job_type": "gpt_image_2",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261025_054533_c38103e0-7436-474f-bb7f-eeaff4ae4b7c_min.webp",
+    "params": {
+      "aspect_ratio": "16:9",
+      "height": 1520,
+      "medias": [],
+      "model": "videotape-alpha",
+      "prompt": "Photorealistic premium automotive photography. A grey performance coupe in a dark studio, front three-quarter view, deep black background, a single sharp red rim light along one side of the body, cool chrome highlights, glossy floor reflection, cinematic. No badges, no logos, no text, blank number plate.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "width": 2688
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261025_054533_c38103e0-7436-474f-bb7f-eeaff4ae4b7c.png",
+    "status": "completed"
+  }
+]

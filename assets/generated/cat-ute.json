@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-25T05:43:43.516603Z",
+    "display_name": "GPT Image 2",
+    "id": "ac6f3978-0494-42a9-960d-f4699539c170",
+    "job_type": "gpt_image_2",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261025_054343_ac6f3978-0494-42a9-960d-f4699539c170_min.webp",
+    "params": {
+      "aspect_ratio": "3:4",
+      "height": 2336,
+      "medias": [],
+      "model": "videotape-alpha",
+      "prompt": "Photorealistic premium automotive photography, moody cinematic, portrait. A dual-cab pickup ute in dark grey, front three-quarter view, on a red-dirt Pilbara road at golden hour with dust, deep shadows, cool chrome highlights. No badges, no logos, no text, blank number plate.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "width": 1744
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261025_054343_ac6f3978-0494-42a9-960d-f4699539c170.png",
+    "status": "completed"
+  }
+]

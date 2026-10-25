@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-25T05:48:33.894919Z",
+    "display_name": "GPT Image 2",
+    "id": "11da27d1-bda1-4429-924f-83e0d797a326",
+    "job_type": "gpt_image_2",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261025_054833_11da27d1-bda1-4429-924f-83e0d797a326_min.webp",
+    "params": {
+      "aspect_ratio": "4:3",
+      "height": 880,
+      "medias": [],
+      "model": "videotape-alpha",
+      "prompt": "Professional used-car dealership stock photo: a silver Toyota RAV4 SUV, Australian-market, front three-quarter view, clean seamless light-grey studio background and floor, soft even studio lighting with gentle ground shadow, car fully in frame centred, photorealistic. Generic styling with no brand badges, no logos, no text, blank number plates.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "1k",
+      "width": 1168
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261025_054833_11da27d1-bda1-4429-924f-83e0d797a326.png",
+    "status": "completed"
+  }
+]

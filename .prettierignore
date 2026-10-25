@@ -1,0 +1,12 @@
+node_modules
+.next
+.open-next
+.wrangler
+dist
+functions/lib
+pnpm-lock.yaml
+brand
+assets
+*.md
+apps/web/components/ui
+.emulator-data

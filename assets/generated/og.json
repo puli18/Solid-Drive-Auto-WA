@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-25T05:46:56.71435Z",
+    "display_name": "GPT Image 2",
+    "id": "9ae93b81-64d0-47e5-832b-b7d9bd444f3c",
+    "job_type": "gpt_image_2",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261025_054656_9ae93b81-64d0-47e5-832b-b7d9bd444f3c_min.webp",
+    "params": {
+      "aspect_ratio": "16:9",
+      "height": 1520,
+      "medias": [],
+      "model": "videotape-alpha",
+      "prompt": "Dark cinematic minimalist banner: a single sleek car silhouette in rim-lit chrome edges on a near-black background, a faint red glow along the road line, large dark empty space in the upper-left and centre for a logo, deep blacks, cool chrome highlights, subtle smoke. No text, no logos, no badges.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "width": 2688
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261025_054656_9ae93b81-64d0-47e5-832b-b7d9bd444f3c.png",
+    "status": "completed"
+  }
+]

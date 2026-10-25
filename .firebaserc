@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "demo-solid-drive",
+    "demo": "demo-solid-drive",
+    "staging": "dealership-staging",
+    "prod": "dealership-prod"
+  }
+}

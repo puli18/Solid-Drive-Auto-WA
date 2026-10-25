@@ -1,0 +1,40 @@
+{
+  "name": "@sda/shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared zod schemas, types, constants and pure helpers for web + functions. Exports TypeScript source (no build step).",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schemas": "./src/schemas/index.ts",
+    "./callables": "./src/callables.ts",
+    "./constants": "./src/constants.ts",
+    "./money": "./src/money.ts",
+    "./slug": "./src/slug.ts",
+    "./status": "./src/status.ts",
+    "./finance": "./src/finance.ts",
+    "./time": "./src/time.ts",
+    "./images": "./src/images.ts",
+    "./slots": "./src/slots.ts",
+    "./collections": "./src/collections.ts",
+    "./demo": "./src/demo/index.ts",
+    "./reports": "./src/reports/index.ts"
+  },
+  "types": "./src/index.ts",
+  "sideEffects": false,
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.2.0",
+    "exceljs": "^4.4.0",
+    "zod": "^4.1.0"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.3",
+    "vitest": "^3.2.4"
+  }
+}

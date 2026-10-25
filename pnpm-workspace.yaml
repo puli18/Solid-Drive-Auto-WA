@@ -1,0 +1,20 @@
+packages:
+  - apps/*
+  - packages/*
+  - functions
+
+# Keep the store on the internal disk: pnpm's SQLite store index hangs on the
+# external USB drive this repo lives on. Cross-volume, so files are copied.
+storeDir: ~/Library/pnpm/store
+packageImportMethod: copy
+
+# Packages allowed to run install scripts (pnpm 10+/11 blocks them by default).
+allowBuilds:
+  '@firebase/util': true
+  esbuild: true
+  protobufjs: true
+  re2: true
+  sharp: true
+  workerd: true
+  '@tailwindcss/oxide': true
+  unrs-resolver: true

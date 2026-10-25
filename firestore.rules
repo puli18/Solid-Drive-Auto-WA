@@ -1,0 +1,177 @@
+rules_version = '2';
+
+// Solid Drive Auto WA – Firestore rules. Mirrors the permission matrix in the build plan exactly.
+// Roles come from the `role` custom claim ('admin' | 'staff'). "Staff" checks below admit admins too.
+// Public writes are denied everywhere: bookings, enquiries and deposits are created only by Cloud
+// Functions (Admin SDK bypasses rules). Hard deletes are denied everywhere (soft delete via deletedAt).
+// Tests: tests/rules/firestore.rules.test.ts
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---- helpers --------------------------------------------------------------
+    function signedIn() { return request.auth != null; }
+    function role() { return signedIn() ? request.auth.token.get('role', '') : ''; }
+    function isAdmin() { return role() == 'admin'; }
+    function isStaff() { return role() == 'admin' || role() == 'staff'; }
+
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+    function changedKeys() { return incoming().diff(existing()).affectedKeys(); }
+    function onlyChanges(keys) { return changedKeys().hasOnly(keys); }
+    function unchanged(field) { return incoming().get(field, null) == existing().get(field, null); }
+
+    // Every client write records who/when. createdAt/updatedAt must be serverTimestamp().
+    function validCreateAudit() {
+      return incoming().createdBy == request.auth.uid
+        && incoming().createdAt == request.time
+        && incoming().updatedBy == request.auth.uid
+        && incoming().updatedAt == request.time
+        && incoming().get('deletedAt', null) == null;
+    }
+    function validUpdateAudit() {
+      return incoming().updatedBy == request.auth.uid
+        && incoming().updatedAt == request.time
+        && unchanged('createdAt')
+        && unchanged('createdBy');
+    }
+    // Soft delete / restore (deletedAt, deletedBy) is admin only.
+    function softDeleteAllowed() {
+      return (unchanged('deletedAt') && unchanged('deletedBy')) || isAdmin();
+    }
+
+    function isNonNegInt(v) { return v is int && v >= 0; }
+
+    // ---- cars (public reads only when published) ---------------------------------
+    function validCar() {
+      let d = incoming();
+      return d.stockNo is string && d.stockNo.size() > 0
+        && d.make is string && d.model is string
+        && d.year is int
+        && d.status in ['draft', 'available', 'reserved', 'sold', 'withdrawn']
+        && d.published is bool
+        && isNonNegInt(d.priceCents)
+        && isNonNegInt(d.km)
+        && d.images is list && d.images.size() <= 30;
+    }
+
+    match /cars/{carId} {
+      allow get, list: if isStaff() || resource.data.published == true;
+      allow create: if isStaff() && validCreateAudit() && validCar();
+      allow update: if isStaff() && validUpdateAudit() && softDeleteAllowed() && validCar();
+      allow delete: if false;
+
+      // Expenses: admin + staff read and create; only admin edits / (soft) deletes.
+      match /expenses/{expenseId} {
+        allow read: if isStaff();
+        allow create: if isStaff() && validCreateAudit()
+          && incoming().carId == carId
+          && incoming().loggedBy == request.auth.uid
+          && isNonNegInt(incoming().amountExGstCents)
+          && isNonNegInt(incoming().gstCents)
+          && incoming().totalCents == incoming().amountExGstCents + incoming().gstCents;
+        allow update: if isAdmin() && validUpdateAudit()
+          && unchanged('carId')
+          && incoming().totalCents == incoming().amountExGstCents + incoming().gstCents;
+        allow delete: if false;
+      }
+    }
+
+    // Collection-group queries over all expenses (reports, dashboard).
+    match /{path=**}/expenses/{expenseId} {
+      allow read: if isStaff();
+    }
+
+    // ---- carFinancials: admin only ---------------------------------------------
+    match /carFinancials/{carId} {
+      allow read: if isAdmin();
+      allow create: if isAdmin() && validCreateAudit();
+      allow update: if isAdmin() && validUpdateAudit();
+      allow delete: if false;
+    }
+
+    // ---- sales: admin full; staff read + create --------------------------------
+    match /sales/{saleId} {
+      allow read: if isStaff();
+      allow create: if isStaff() && validCreateAudit()
+        && isNonNegInt(incoming().salePriceCents) && isNonNegInt(incoming().saleGstCents);
+      allow update: if isAdmin() && validUpdateAudit();
+      allow delete: if false;
+    }
+
+    // ---- bookings: admin + staff; created only by functions ----------------------
+    // Dashboard may change status and notes only (cancellations release the slot via a trigger).
+    match /bookings/{bookingId} {
+      allow read: if isStaff();
+      allow create: if false;
+      allow update: if isStaff()
+        && onlyChanges(['status', 'notes', 'updatedAt', 'updatedBy'])
+        && incoming().updatedBy == request.auth.uid
+        && incoming().updatedAt == request.time
+        && incoming().status in ['confirmed', 'cancelled', 'attended', 'no-show'];
+      allow delete: if false;
+    }
+
+    // ---- slot locks / counts / stripe events: functions only --------------------
+    match /slotLocks/{lockId} { allow read, write: if false; }
+    match /slotCounts/{slotId} { allow read, write: if false; }
+    match /stripeEvents/{eventId} { allow read, write: if false; }
+
+    // ---- deposits: admin read; functions write ----------------------------------
+    // Admin may only mark a conflict resolved.
+    match /deposits/{depositId} {
+      allow read: if isAdmin();
+      allow create, delete: if false;
+      allow update: if isAdmin()
+        && onlyChanges(['conflictResolvedAt', 'conflictResolvedBy', 'conflictNote', 'updatedAt', 'updatedBy'])
+        && incoming().updatedBy == request.auth.uid
+        && incoming().updatedAt == request.time;
+    }
+
+    // ---- enquiries: admin + staff; created only by functions ----------------------
+    match /enquiries/{enquiryId} {
+      allow read: if isStaff();
+      allow create, delete: if false;
+      allow update: if isStaff()
+        && onlyChanges(['status', 'assignedTo', 'notes', 'bookingId', 'updatedAt', 'updatedBy'])
+        && incoming().updatedBy == request.auth.uid
+        && incoming().updatedAt == request.time
+        && incoming().status in ['new', 'contacted', 'booked', 'won', 'lost'];
+    }
+
+    // ---- vendors: admin + staff ---------------------------------------------------
+    match /vendors/{vendorId} {
+      allow read: if isStaff();
+      allow create: if isStaff() && validCreateAudit() && incoming().name is string && incoming().name.size() > 0;
+      allow update: if isStaff() && validUpdateAudit() && softDeleteAllowed();
+      allow delete: if false;
+    }
+
+    // ---- users: admin write; user reads self --------------------------------------
+    match /users/{uid} {
+      allow read: if isAdmin() || (signedIn() && request.auth.uid == uid);
+      allow create, update: if isAdmin() && incoming().role in ['admin', 'staff'] && incoming().active is bool;
+      allow delete: if false;
+    }
+
+    // ---- settings ---------------------------------------------------------------------
+    // business / booking / deposit / finance / legal: public read. app: staff read. Admin writes all.
+    match /settings/{docId} {
+      allow read: if docId in ['business', 'booking', 'deposit', 'finance', 'legal']
+        || (docId == 'app' && isStaff())
+        || isAdmin();
+      allow create, update: if isAdmin() && incoming().updatedBy == request.auth.uid && incoming().updatedAt == request.time;
+      allow delete: if false;
+    }
+
+    // ---- auditLog: admin read; functions write --------------------------------------
+    match /auditLog/{entryId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    // ---- everything else: denied ------------------------------------------------------
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

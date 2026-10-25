@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-25T05:45:14.265387Z",
+    "display_name": "GPT Image 2",
+    "id": "d075b925-ba83-4c48-8995-702ebc8ccfc9",
+    "job_type": "gpt_image_2",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261025_054514_d075b925-ba83-4c48-8995-702ebc8ccfc9_min.webp",
+    "params": {
+      "aspect_ratio": "3:4",
+      "height": 2336,
+      "medias": [],
+      "model": "videotape-alpha",
+      "prompt": "Photorealistic premium automotive photography, moody cinematic, portrait. A dark green station wagon, front three-quarter view, on a bush road in south-west Western Australia at dusk, tall eucalypts, misty light, deep blacks, cool chrome highlights. No badges, no logos, no text, blank number plate.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "width": 1744
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261025_054514_d075b925-ba83-4c48-8995-702ebc8ccfc9.png",
+    "status": "completed"
+  }
+]

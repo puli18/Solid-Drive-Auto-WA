@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-25T05:43:41.956153Z",
+    "display_name": "GPT Image 2",
+    "id": "c5121cf4-a6eb-46ba-806c-bd3b21729c9e",
+    "job_type": "gpt_image_2",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261025_054341_c5121cf4-a6eb-46ba-806c-bd3b21729c9e_min.webp",
+    "params": {
+      "aspect_ratio": "3:4",
+      "height": 2336,
+      "medias": [],
+      "model": "videotape-alpha",
+      "prompt": "Photorealistic premium automotive photography, moody cinematic, portrait. A mid-size family SUV in dark metallic blue, front three-quarter view, on a Perth coastal road at dusk, wet asphalt, deep blacks, cool chrome highlights, faint red accent light. No badges, no logos, no text, blank number plate.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "width": 1744
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261025_054341_c5121cf4-a6eb-46ba-806c-bd3b21729c9e.png",
+    "status": "completed"
+  }
+]
