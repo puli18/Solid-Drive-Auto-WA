@@ -45,9 +45,10 @@ export function SiteFooter({ settings }: { settings: PublicSettings }) {
             SOLID DRIVE
           </p>
         </div>
-        <div className="mt-6 flex items-center gap-3">
+        <div className="mt-6 flex items-center justify-center gap-3">
           <span aria-hidden className="sda-blade w-16" />
-          <span className="text-brand-chrome text-xs font-semibold tracking-[0.5em] uppercase">Auto · WA</span>
+          {/* Negative right margin cancels the trailing letter-spacing so the text sits optically centred. */}
+          <span className="text-brand-chrome -mr-[0.5em] text-xs font-semibold tracking-[0.5em] uppercase">Auto · WA</span>
           <span aria-hidden className="sda-blade sda-blade-rev w-16" />
         </div>
 
