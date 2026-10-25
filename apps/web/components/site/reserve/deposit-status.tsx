@@ -76,8 +76,8 @@ export function DepositStatus({ sessionId, demo, phone }: { sessionId: string; d
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             {status.carSlug ? (
-              <Link href={`/cars/${status.carSlug}/book`} className="sda-press bg-brand-black inline-flex h-12 items-center rounded-full px-6 text-sm font-semibold text-white">
-                Book a time to see it
+              <Link href={`/cars/${status.carSlug}`} className="sda-press bg-brand-black inline-flex h-12 items-center rounded-full px-6 text-sm font-semibold text-white">
+                View the car
               </Link>
             ) : null}
             <Link href="/" className="inline-flex h-12 items-center px-3 text-sm font-semibold underline underline-offset-4">

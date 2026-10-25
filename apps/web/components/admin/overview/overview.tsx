@@ -161,7 +161,7 @@ export function Overview() {
       ) : loading || !m ? (
         <div className="space-y-4">
           <Skeleton className="h-24 w-full" />
-          <div className="grid gap-4 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <Skeleton className="h-64" />
             <Skeleton className="h-64" />
           </div>
@@ -185,7 +185,7 @@ export function Overview() {
             </div>
           )}
 
-          <div className="grid gap-4 lg:grid-cols-5">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
             <Panel
               className="lg:col-span-3"
               title="Coming up"
@@ -233,7 +233,7 @@ export function Overview() {
             </Panel>
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-5">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
             <Panel
               className="lg:col-span-3"
               title="New enquiries"
@@ -280,7 +280,7 @@ export function Overview() {
             </Panel>
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-5">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
             <Panel
               className={m.money ? 'lg:col-span-3' : 'lg:col-span-5'}
               title={`Aged stock (over ${m.agedDays} days)`}

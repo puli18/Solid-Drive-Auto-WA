@@ -215,7 +215,7 @@ export function EnquiriesView() {
       ) : loading || !data ? (
         <ListSkeleton />
       ) : (
-        <div className="grid gap-4 md:grid-cols-[minmax(280px,380px)_1fr]">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(280px,380px)_minmax(0,1fr)]">
           <div className={cn('space-y-3', current && 'hidden md:block')}>
             <div className="-mx-4 space-y-2 overflow-x-auto px-4 [scrollbar-width:none] md:mx-0 md:px-0">
               <Filters

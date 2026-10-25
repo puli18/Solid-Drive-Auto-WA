@@ -1,5 +1,5 @@
 import { Check, LogOut, Monitor, Moon, Sun, UserRound } from 'lucide-react';
-import { useTheme } from 'next-themes';
+import { useTheme } from '../theme';
 import { useRouter } from '@/lib/navigation';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';

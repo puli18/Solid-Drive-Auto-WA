@@ -121,7 +121,7 @@ function BookingSheet({ booking, onClose, onChanged }: { booking: BookingRecord 
             <ToneBadge tone={STATUS_TONE[b.status]}>{BOOKING_STATUS_LABELS[b.status]}</ToneBadge>
             <span className="text-muted-foreground text-xs">{b.source === 'staff' ? 'Booked by staff' : 'Booked online'}</span>
           </div>
-          <dl className="grid grid-cols-[96px_1fr] gap-y-2">
+          <dl className="grid grid-cols-[96px_minmax(0,1fr)] gap-y-2">
             <dt className="text-muted-foreground">Car</dt>
             <dd>
               <Link href={`/admin/cars/${b.carId}`} className="underline-offset-4 hover:underline">
@@ -253,7 +253,7 @@ export function BookingsView() {
           ) : (
             <ol className="space-y-2">
               {list.map((b) => (
-                <li key={b.id} className="grid grid-cols-[64px_1fr] gap-3">
+                <li key={b.id} className="grid grid-cols-[64px_minmax(0,1fr)] gap-3">
                   <span className="text-muted-foreground pt-2 text-right text-xs tabular-nums">{timeAU(b.startAt)}</span>
                   <BookingCard b={b} onOpen={() => setOpenId(b.id)} />
                 </li>
@@ -262,7 +262,7 @@ export function BookingsView() {
           );
         })()
       ) : view === 'week' ? (
-        <div className="grid gap-2 md:grid-cols-7">
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-7">
           {Array.from({ length: 7 }, (_, i) => {
             const k = addDaysToDateKey(weekStart, i);
             const list = byDay.get(k) ?? [];
@@ -291,7 +291,7 @@ export function BookingsView() {
           ) : (
             <ul className="space-y-2">
               {list.map((b) => (
-                <li key={b.id} className="grid grid-cols-[88px_1fr] items-start gap-3">
+                <li key={b.id} className="grid grid-cols-[88px_minmax(0,1fr)] items-start gap-3">
                   <span className="text-muted-foreground pt-2 text-xs">{formatInTz(b.startAt, 'EEE d MMM', TZ)}</span>
                   <BookingCard b={b} onOpen={() => setOpenId(b.id)} />
                 </li>

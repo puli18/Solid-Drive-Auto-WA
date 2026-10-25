@@ -232,7 +232,7 @@ export default function HomePage() {
               className="-z-10 object-cover object-[78%_center]"
             />
             <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-r from-[#b81f18]/85 via-[#b81f18]/40 to-transparent md:via-transparent" />
-            <div className="flex min-h-[24rem] max-w-lg flex-col justify-center p-7 sm:min-h-[26rem] sm:p-12">
+            <div className="flex min-h-[24rem] max-w-xl flex-col justify-center p-7 sm:min-h-[26rem] sm:p-12">
               <p className="text-sm font-medium text-white/85">Trade-in valuations</p>
               <h2 className="font-display mt-3 text-[clamp(2rem,4.5vw,3.25rem)] leading-[1] font-black text-white" style={{ fontStretch: '112%' }}>
                 Your old car is

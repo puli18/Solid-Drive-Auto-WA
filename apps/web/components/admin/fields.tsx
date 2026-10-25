@@ -162,7 +162,7 @@ export const optionsFrom = <K extends string>(labels: Record<K, string>) =>
 
 export function FormSection({ title, description, children, className }: { title: string; description?: string; children: ReactNode; className?: string }) {
   return (
-    <fieldset className={cn('grid gap-4 border-t pt-5 first:border-t-0 first:pt-0 md:grid-cols-[200px_1fr] md:gap-8', className)}>
+    <fieldset className={cn('grid grid-cols-1 gap-4 border-t pt-5 first:border-t-0 first:pt-0 md:grid-cols-[200px_minmax(0,1fr)] md:gap-8', className)}>
       <legend className="sr-only">{title}</legend>
       <div>
         <h3 className="font-sans text-sm font-semibold">{title}</h3>

@@ -18,7 +18,7 @@ export default function ReserveSuccessPage() {
   const sp = Object.fromEntries(useSearchParams()[0]) as Record<string, string | undefined>;
   return (
     <>
-      <PageHero title="Your reservation" muted="Checking the payment." />
+      <PageHero title="Your reservation" muted="Deposit and next steps." />
       <section className="bg-background py-12 sm:py-16">
         <Container className="max-w-3xl">
           <DepositStatus sessionId={one(sp.session_id)} demo={one(sp.demo) === '1'} phone={settings.business.phone} />

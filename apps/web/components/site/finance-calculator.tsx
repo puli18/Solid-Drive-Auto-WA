@@ -119,7 +119,7 @@ export function FinanceCalculator({
               )}
             >
               {t / 12}
-              <span className="sr-only"> years</span>
+              <span className="sr-only">{t === 12 ? ' year' : ' years'}</span>
               <span aria-hidden className="text-[11px] font-medium opacity-70">
                 y
               </span>
