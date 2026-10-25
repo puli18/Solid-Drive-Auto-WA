@@ -165,7 +165,7 @@ export function CarEditor({ id }: { id: string }) {
             <TabsContent value="details">
               <CarDetailsForm key={car.updatedAt?.getTime()} car={car} submitLabel="Save changes" onSubmit={(v) => saveDetails(v, car)} />
               {isAdmin && (
-                <div className="mt-10 flex flex-col gap-2 border-t pt-5 sm:flex-row sm:items-center sm:justify-between">
+                <div className="mt-6 mb-20 flex flex-col gap-2 border-t pt-5 sm:flex-row md:mt-10 md:mb-0 sm:items-center sm:justify-between">
                   <p className="text-muted-foreground text-sm">Deleting hides the car everywhere. Admins can restore it.</p>
                   <Button variant="outline" className="text-destructive" onClick={() => void softDelete()}>
                     <Trash2 /> Delete car

@@ -84,7 +84,7 @@ export function SlotPicker({
 
   return (
     <div className="grid gap-6 xl:grid-cols-[auto_1fr]">
-      <div className="bg-background min-h-[22rem] w-fit min-w-[19rem] rounded-xl ring-1 ring-black/10">
+      <div className="bg-background min-h-[22rem] w-full rounded-xl ring-1 ring-black/10 sm:w-fit sm:min-w-[19rem]">
         {mounted ? (
           <Calendar
             mode="single"
@@ -99,7 +99,8 @@ export function SlotPicker({
             endMonth={keyToDate(lastDay)}
             disabled={(d) => !isOpenDay(d)}
             weekStartsOn={1}
-            className="rounded-xl [--cell-size:--spacing(10)]"
+            className="w-full rounded-xl [--cell-size:--spacing(10)] sm:w-fit"
+            classNames={{ root: 'w-full sm:w-fit' }}
           />
         ) : null}
       </div>

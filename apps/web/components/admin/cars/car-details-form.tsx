@@ -188,6 +188,8 @@ export function CarDetailsForm({
             {submitLabel}
           </Button>
         </div>
+        {/* Reserves room for the fixed mobile save bar so content below the form isn't hidden behind it. */}
+        <div aria-hidden className="h-16 md:hidden" />
       </form>
     </Form>
   );

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "dev:demo": "VITE_DEMO_MODE=true VITE_USE_EMULATORS=false vite",
+    "dev:demo": "VITE_DEMO_MODE=true VITE_USE_EMULATORS=false vite --host",
     "build": "SDA_DEPLOY_ENV=production vite build && tsx scripts/generate-sitemap.ts",
     "build:preview": "VITE_DEMO_MODE=true VITE_USE_EMULATORS=false vite build && VITE_DEMO_MODE=true tsx scripts/generate-sitemap.ts",
     "preview": "vite preview",
