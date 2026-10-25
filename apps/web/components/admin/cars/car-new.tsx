@@ -34,6 +34,8 @@ export function CarNew() {
           }}
         />
       )}
+      {/* Room for the fixed mobile save bar so the last fields can scroll clear of it. */}
+      <div aria-hidden className="h-16 md:hidden" />
     </>
   );
 }

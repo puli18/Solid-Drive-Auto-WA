@@ -140,7 +140,7 @@ export function CarDetailsForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(submit, () => toast.error('Check the highlighted fields'))}
-        className="space-y-6 pb-20 md:pb-0"
+        className="space-y-6"
         noValidate
       >
         <FormSection title="Vehicle" description="What the customer sees in the listing title and specs.">
@@ -188,8 +188,6 @@ export function CarDetailsForm({
             {submitLabel}
           </Button>
         </div>
-        {/* Reserves room for the fixed mobile save bar so content below the form isn't hidden behind it. */}
-        <div aria-hidden className="h-16 md:hidden" />
       </form>
     </Form>
   );
