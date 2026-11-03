@@ -6,6 +6,9 @@ import { getPublicSettings } from '@/lib/data/public';
 import { EnquiryForm } from '@/components/site/forms/enquiry-form';
 import { addressLines, hoursRows, mapsEmbedUrl, mapsUrl, telHref } from '@/components/site/lib/format';
 import { Container, PageHero } from '@/components/site/primitives';
+import { WEEKDAYS } from '@sda/shared';
+
+const SCHEMA_DAY = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' } as const;
 
 export const metadata: Metadata = {
   title: 'Contact & directions',
@@ -26,7 +29,15 @@ export default function ContactPage() {
     name: b.name,
     telephone: b.phone,
     email: b.email,
-    openingHours: b.hours,
+    // Structured hours from the booking rules (weekly open ranges); the display text is b.hours.
+    openingHoursSpecification: WEEKDAYS.flatMap((d) =>
+      (s.booking.weeklyHours[d] ?? []).map((r) => ({
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: `https://schema.org/${SCHEMA_DAY[d]}`,
+        opens: r.start,
+        closes: r.end,
+      })),
+    ),
     address: {
       '@type': 'PostalAddress',
       streetAddress: [b.address.line1, b.address.line2].filter(Boolean).join(', '),

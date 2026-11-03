@@ -34,7 +34,7 @@ export function ReceiptRedirect({ path }: { path: string }) {
     if (DEMO_MODE || typeof repo.getFileUrl !== 'function') {
       setProblem(
         DEMO_MODE
-          ? 'In the preview, uploaded files are only kept until the page is reloaded, and sample expenses have no receipts.'
+          ? 'In the preview, uploaded files are only kept until the page is reloaded.'
           : 'Opening stored files isn’t connected yet.',
       );
       return;

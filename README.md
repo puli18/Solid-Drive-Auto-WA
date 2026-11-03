@@ -13,7 +13,7 @@ Public website (browse stock, book test drives/inspections, pay a non-refundable
 | `functions` | Firebase Cloud Functions (2nd gen, Node 20, region `australia-southeast1`) |
 | `packages/shared` | `@sda/shared` – zod schemas, types, constants, money/GST, slug, status rules, finance calc, Perth time + slot helpers |
 | `tests/rules` | Firestore + Storage security rules tests (`@firebase/rules-unit-testing`) |
-| `scripts` | `seed.ts` (+ `seed.config.ts`), `with-java.sh` |
+| `scripts` | `seed.ts` (+ `seed.config.ts`, emulators), `seed-stock.ts` (stock + settings to a real project), `data/stock.ts` (the dealer's cars – scripts only), `with-java.sh` |
 | `firestore.rules`, `storage.rules`, `firestore.indexes.json`, `firebase.json`, `.firebaserc` | Firebase config |
 
 ## Prerequisites
@@ -30,9 +30,9 @@ cp apps/web/.env.example apps/web/.env.local       # emulator defaults
 cp functions/.env.example functions/.env.local     # optional: functions env for the emulator
 
 pnpm emulators     # builds functions, starts Auth, Firestore, Functions, Storage + UI (http://127.0.0.1:4010)
-pnpm seed          # (new terminal) resets + seeds the emulators: settings, 20 cars, expenses, bookings, a sale, users
+pnpm seed          # (new terminal) resets + seeds the emulators: settings, the current stock (3 cars), demo users
 pnpm dev           # Vite dev server on http://localhost:3000  (admin at /admin)
-pnpm dev:demo      # same, on the bundled demo data (no emulators needed)
+pnpm dev:demo      # demo mode (bundled logins/settings, no emulators) with cars read from the live project
 ```
 
 Seed logins (emulator only; test values from `DEMO_ACCOUNTS` in `@sda/shared/demo`, passwords Demo-Admin-2026 / Demo-Staff-2026): `admin@soliddrive.test` (admin) and `staff@soliddrive.test` (staff).
@@ -98,9 +98,24 @@ pnpm build                                                     # refuses to run 
 npx wrangler pages deploy dist --project-name <pages-project>  # or connect the repo in Cloudflare Pages: build command `pnpm --filter web build`, output `apps/web/dist`
 ```
 
-## Client preview deploy (demo mode – no Firebase/Stripe accounts needed)
+## Stock data (cars live in Firestore)
 
-`VITE_DEMO_MODE=true` builds the site on the bundled sample data (`@sda/shared/demo`, the same data `pnpm seed` writes). Public pages render from the fixtures; forms validate and show their success state without sending anything; the admin accepts the demo accounts below and saves edits only in the viewer's browser (with a reset button).
+Cars are never bundled into the app. The dealer's stock is seed data in `scripts/data/stock.ts`, written by:
+
+```bash
+pnpm seed:stock --emulator --write                    # local emulators (pnpm seed also includes the stock)
+GOOGLE_APPLICATION_CREDENTIALS="$HOME/.config/firebase/<you>_application_default_credentials.json" \
+  pnpm seed:stock --project solid-drive-auto-wa         # dry run: prints what would be written (reads only)
+#   ... --write                 write the 3 cars (car-sda1001..3) + missing settings/* docs
+#   ... --overwrite             replace existing cars; --overwrite-settings replaces existing settings
+#   ... --upload-images         upload photos to Storage cars/<carId>/NN.webp and store https URLs (bucket must exist)
+```
+
+It validates every doc against the shared zod schemas, never deletes, skips existing docs by default, and keeps `local:cars/...` photo ids (the photos ship as static site assets) unless `--upload-images`. Public reads need the repo's rules deployed: `npx firebase deploy --only firestore:rules,firestore:indexes --project solid-drive-auto-wa`.
+
+## Client preview deploy (demo mode – no Functions/Auth/Stripe needed)
+
+`pnpm --filter web build:preview` builds with Vite mode `preview` (`apps/web/.env.preview`: `VITE_DEMO_MODE=true`, the public web config of `solid-drive-auto-wa`). Logins, settings, bookings, enquiries and the admin run on bundled demo data (`@sda/shared/demo`) plus a localStorage overlay; the **cars are read from the live Firestore project** (published cars, public reads, never written). Forms validate and show their success state without sending anything; the admin accepts the demo accounts below, lists the live cars and saves edits only in the viewer's browser (with a reset button). With no real Firebase config (`pnpm --filter web dev:demo:offline`) demo mode has no cars and the empty states show.
 
 | Account | Email | Password |
 | --- | --- | --- |
@@ -109,14 +124,14 @@ npx wrangler pages deploy dist --project-name <pages-project>  # or connect the 
 
 ```bash
 pnpm install
-pnpm --filter web dev:demo               # optional: dev server on the demo data (http://localhost:3000)
+pnpm --filter web dev:demo               # optional: dev server in preview mode (http://localhost:3000)
 pnpm --filter web build:preview          # optional local check (demo build) …
 pnpm --filter web preview                # … served locally
 cd apps/web && npx wrangler login        # once – a free Cloudflare account is enough
 pnpm --filter web deploy:preview         # demo build + `wrangler pages deploy dist --project-name solid-drive-preview` → https://solid-drive-preview.pages.dev
 ```
 
-No other env vars are needed. Demo mode must never be used for production: `pnpm build` sets `SDA_DEPLOY_ENV=production` and `vite.config.ts` fails the build if demo mode is on.
+No other env vars are needed (`.env.preview` is committed; Firebase web config is public). Demo mode must never be used for production: `pnpm build` sets `SDA_DEPLOY_ENV=production` and `vite.config.ts` fails the build if demo mode is on.
 
 ## First admin
 

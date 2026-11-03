@@ -30,7 +30,38 @@ async function write(path: (d: DemoDoc) => string, docs: DemoDoc[]) {
   await batch.commit();
 }
 
-const ds = buildDemoDataset();
+const base = buildDemoDataset();
+// The bundled dataset is real stock with no financials or sales, so the export tests add one sold
+// test car (with purchase details, expenses and a sale) and switch syndication on for the real cars.
+const now = new Date();
+const testCar: DemoDoc = {
+  ...base.cars[0]!,
+  id: 'car-test-sold',
+  stockNo: 'TEST1',
+  slug: '2015-testmake-sold-test1',
+  make: 'Testmake',
+  model: 'Sold',
+  year: 2015,
+  status: 'sold',
+  soldAt: now,
+  syndication: { carsales: false, gumtree: false, facebook: false },
+};
+const ds: typeof base = {
+  ...base,
+  cars: [
+    ...base.cars.map((c, i): DemoDoc => ({ ...c, syndication: { carsales: true, gumtree: false, facebook: i === 0 } })),
+    testCar,
+  ],
+  carFinancials: [
+    { id: testCar.id, purchaseDate: now, purchasePriceCents: 400_000, purchaseGstCents: 0, source: 'private', sellerName: 'Test seller', notes: '', createdAt: now, createdBy: 'seed', updatedAt: now, updatedBy: 'seed', deletedAt: null },
+  ],
+  expenses: [
+    { id: 'exp-test-1', carId: testCar.id, date: now, category: 'tyres', description: 'Test tyres', vendorId: null, vendorName: 'Test vendor', invoiceNo: 'T-1', amountExGstCents: 50_000, gstCents: 5_000, totalCents: 55_000, receiptPath: null, loggedBy: STAFF.uid, createdAt: now, createdBy: STAFF.uid, updatedAt: now, updatedBy: STAFF.uid, deletedAt: null },
+  ],
+  sales: [
+    { id: 'sale-test-1', carId: testCar.id, stockNo: testCar.stockNo, saleDate: now, salePriceCents: 545_455, saleGstCents: 54_545, buyer: { name: 'Test buyer' }, depositId: null, tradeIn: null, paymentMethod: 'bank-transfer', financeCompany: '', salespersonUid: STAFF.uid, documents: [], notes: '', createdAt: now, createdBy: STAFF.uid, updatedAt: now, updatedBy: STAFF.uid, deletedAt: null },
+  ],
+};
 beforeAll(async () => {
   await resetFirestore();
   await resetAuth();
@@ -79,7 +110,7 @@ describe('exports', () => {
     await wb.xlsx.load((await download(x.url)) as unknown as ArrayBuffer);
     expect(wb.worksheets.map((w) => w.name)).toEqual([...STOCK_REPORT_SHEETS]);
     const ss = wb.getWorksheet('Stock Summary')!;
-    expect(ss.actualRowCount).toBeGreaterThan(10);
+    expect(ss.actualRowCount).toBeGreaterThanOrEqual(ds.cars.length + 1);
     expect((ss.getRow(ss.actualRowCount).getCell('L').value as ExcelJS.CellFormulaValue).formula).toMatch(/^SUM\(L2:L\d+\)$/);
     const csv = await exportStockReport.run(callReq({ from, to, format: 'csv-expenses' }, ADMIN));
     expect(csv.fileName).toBe(`StockReport_${from}_to_${to}_Expenses.csv`);

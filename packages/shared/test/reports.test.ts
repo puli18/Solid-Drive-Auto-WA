@@ -23,10 +23,10 @@ import {
   stockSummaryCsv,
 } from '../src/reports';
 import { addDaysToDateKey, todayInTz } from '../src/time';
+import { testReportSource } from './fixtures/report-source';
 
 const NOW = new Date('2026-10-25T02:00:00Z');
-const ds = buildDemoDataset({ now: NOW });
-const src = reportSourceFromDemo(ds);
+const src = testReportSource(NOW);
 const ctx = { businessName: 'Solid Drive Auto WA', siteUrl: 'https://example.test', generatedAt: NOW };
 const today = todayInTz('Australia/Perth', NOW);
 const from = addDaysToDateKey(today, -90);
@@ -43,7 +43,7 @@ const lastRow = (ws: ExcelJS.Worksheet) => ws.getRow(ws.actualRowCount);
 const formulaOf = (cell: ExcelJS.Cell) => (cell.value as ExcelJS.CellFormulaValue | null)?.formula;
 
 describe('car report', () => {
-  const sold = ds.cars.find((c) => c.status === 'sold')!;
+  const sold = src.cars.find((c) => c.status === 'sold')!;
   const data = carReportDataFromSource(src, sold.id, ctx)!;
 
   it('has the planned sheets, headers and formula totals', async () => {
@@ -121,7 +121,7 @@ describe('stock & sales report', () => {
   const data = stockReportDataFromSource(src, { from, to: today }, ctx);
 
   it('has the planned sheets, headers and formula totals', async () => {
-    expect(data.stock.length).toBeGreaterThan(10);
+    expect(data.stock).toHaveLength(src.cars.length);
     expect(data.sales.length).toBe(1);
     const wb = await roundTrip(buildStockReport(data));
     expect(wb.worksheets.map((w) => w.name)).toEqual([...STOCK_REPORT_SHEETS]);
@@ -178,5 +178,29 @@ describe('stock & sales report', () => {
 
   it('names the file per the plan', () => {
     expect(stockReportFileName('2026-07-01', '2026-09-30')).toBe('StockReport_2026-07-01_to_2026-09-30.xlsx');
+  });
+});
+
+describe('reports from the bundled demo dataset (no cars: stock lives in Firestore)', () => {
+  const demo = reportSourceFromDemo(buildDemoDataset({ now: NOW }));
+
+  it('builds an empty stock report', async () => {
+    const data = stockReportDataFromSource(demo, { from, to: today }, ctx);
+    expect(demo.cars).toHaveLength(0);
+    expect(data.stock).toHaveLength(0);
+    expect(data.expenses).toHaveLength(0);
+    expect(data.sales).toHaveLength(0);
+    const wb = await roundTrip(buildStockReport(data));
+    expect(wb.worksheets.map((w) => w.name)).toEqual([...STOCK_REPORT_SHEETS]);
+  });
+
+  it('builds a car report for a car with no purchase details', async () => {
+    const noFinancials = { ...src, carFinancials: [], sales: [] };
+    const car = noFinancials.cars[0]!;
+    const data = carReportDataFromSource(noFinancials, car.id, ctx)!;
+    expect(data.financials).toBeNull();
+    expect(data.sale).toBeNull();
+    const wb = await roundTrip(buildCarReport(data));
+    expect(wb.worksheets.map((w) => w.name)).toEqual([...CAR_REPORT_SHEETS]);
   });
 });

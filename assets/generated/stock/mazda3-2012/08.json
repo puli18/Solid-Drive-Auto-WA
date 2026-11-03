@@ -1,0 +1,22 @@
+{
+  "method": "composite (no AI re-rendering); original photo pixels kept everywhere except the masked glass area",
+  "source": "assets/cars/1/f282e1b3-4ae9-4617-bd5c-0b1a04d5c94d.JPG",
+  "mask": "Luminance threshold (blown-out sky/glass, lum > 236) inside hand-traced window-zone polygons above the dash and door belt line.",
+  "fill": "smooth neutral light-grey studio gradient (tones [212, 228, 230, 222], horizon at source y=150), slight per-window glass tint, faint low-frequency reflection (6% of the original glass luminance variation), light grain",
+  "feather_px": 1.2,
+  "watermark": "Galaxy S24+ / time text removed by OpenCV Telea inpaint limited to the text pixels in the bottom-left corner (mostly outside the crop)",
+  "global_adjustments": {
+    "exposure": 0.96,
+    "gamma": 1.0
+  },
+  "crop": {
+    "x": 0,
+    "y": 0,
+    "width": 1496,
+    "height": 1122
+  },
+  "outputs": {
+    "full_res": "assets/generated/stock/mazda3-2012/08.png (1496x1122)",
+    "web": "apps/web/public/images/cars/mazda3-2012/08.webp (1168x880, cwebp -q 80)"
+  }
+}

@@ -18,7 +18,7 @@ import { carAuditAction, purgeUrlsFor } from '../src/cars/onCarWrite';
 
 const base = {
   siteUrl: 'https://example.test',
-  business: { name: 'Solid Drive Auto WA', phone: '(08) 9000 0000', email: 'sales@example.test', address: '1 Test St, Osborne Park WA 6017' },
+  business: { name: 'Solid Drive Auto WA', phone: '0451 847 563', email: 'sales@example.test', address: '1/14 Wells Street, Bellevue WA 6056' },
 };
 const booking = { ...base, customerName: 'Liam', carTitle: '2021 Toyota Hilux SR5', stockNo: 'SDA1001', typeLabel: 'Test drive', whenLabel: 'Tue 27 Oct 2026, 9:00 am' };
 const deposit = { ...base, customerName: 'Priya', carTitle: '2021 Toyota RAV4', stockNo: 'SDA1005', amountLabel: '$500.00' };

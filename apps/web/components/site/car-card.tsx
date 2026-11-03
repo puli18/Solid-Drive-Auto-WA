@@ -1,10 +1,10 @@
 import { Img } from '@/components/img';
 import Link from '@/components/link';
 import { ArrowUpRight } from 'lucide-react';
-import { formatAUD, type PublicCar } from '@sda/shared';
+import type { PublicCar } from '@sda/shared';
 import { carCoverUrl } from '@/lib/images';
 import { cn } from '@/lib/utils';
-import { carName, fuelLabel, nf, transmissionLabel } from './lib/format';
+import { carName, formatKm, formatPrice, fuelLabel, transmissionLabel } from './lib/format';
 import { daysListed, NEW_ARRIVAL_DAYS } from './lib/inventory';
 
 /** Status chip. Reserved/Sold are never colour-only: the word is always shown. */
@@ -68,7 +68,7 @@ export function CarCard({
       <div className="flex flex-1 flex-col pt-4">
         <div className="flex items-baseline justify-between gap-3">
           <p className="font-display sda-num text-2xl font-extrabold tracking-tight" style={{ fontStretch: '110%' }}>
-            {formatAUD(car.priceCents)}
+            {formatPrice(car.priceCents)}
           </p>
           <p className="text-muted-foreground font-mono text-[11px]">{car.stockNo}</p>
         </div>
@@ -84,7 +84,7 @@ export function CarCard({
         <dl className="border-border mt-4 grid grid-cols-3 border-t pt-3 text-[13px]">
           <div>
             <dt className="sr-only">Odometer</dt>
-            <dd className="sda-num font-mono">{nf.format(car.km)} km</dd>
+            <dd className="sda-num font-mono">{formatKm(car.km)}</dd>
           </div>
           <div>
             <dt className="sr-only">Transmission</dt>

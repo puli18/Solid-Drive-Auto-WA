@@ -38,7 +38,7 @@ describe('availability', () => {
     const r = await getAvailability.run(callReq({ carId: 'car-a', date }));
     expect(r.slots[0]).toBe(at('09:00'));
     expect(r.slots[1]).toBe(at('10:00'));
-    expect(r.slots).toHaveLength(8); // 9:00 … 16:00 (16:00+45 <= 17:00)
+    expect(r.slots).toHaveLength(8); // 9:00 … 16:00 (16:00+45 <= 17:30; 17:00+45 > 17:30)
   });
 
   it('returns nothing for blackout dates, unpublished/unavailable cars and past dates', async () => {

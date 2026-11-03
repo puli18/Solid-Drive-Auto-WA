@@ -1,4 +1,7 @@
-/** Demo adapter for the admin surface: fixtures + localStorage overlay (this browser only). */
+/**
+ * Demo adapter for the admin surface: fixtures + localStorage overlay (this browser only). Cars come from the
+ * live Firestore project when DEMO_LIVE_CARS (read-only, see ./live-cars.ts); edits stay in the overlay.
+ */
 import { carInputSchema, carFinancialsInputSchema, expenseInputSchema, saleInputSchema, vendorInputSchema } from '@sda/shared';
 import type { DemoDoc } from '@sda/shared/demo';
 import { datesFromKeys, derivedCarFields, sortNewestFirst, withSettingsDefaults } from '../common';
@@ -15,6 +18,7 @@ import type {
   UserRecord,
   VendorRecord,
 } from '../types';
+import { ensureDemoLiveCars } from './live-cars';
 import { demoGet, demoGetSettings, demoList, demoNewId, demoPut, demoPutSettings, type DemoCollection } from './store';
 
 const created = (uid: string) => {
@@ -42,10 +46,12 @@ export const demoAdminRepo: AdminRepository = {
   mode: 'demo',
 
   async listCars(opts) {
+    await ensureDemoLiveCars();
     const rows = demoList('cars').filter((c) => opts?.includeDeleted || !c.deletedAt);
     return as<CarRecord[]>(sortNewestFirst(rows));
   },
   async getCar(id) {
+    await ensureDemoLiveCars();
     return as<CarRecord | null>(demoGet('cars', id));
   },
   async createCar(input, uid) {
@@ -56,6 +62,7 @@ export const demoAdminRepo: AdminRepository = {
     return id;
   },
   async updateCar(id, patch, uid) {
+    await ensureDemoLiveCars();
     const before = demoGet('cars', id);
     if (!before) throw new Error('Car not found');
     const merged = { ...before, ...datesFromKeys(patch as Record<string, unknown>) } as unknown as Parameters<typeof derivedCarFields>[0];
@@ -64,10 +71,12 @@ export const demoAdminRepo: AdminRepository = {
     audit(uid, action, 'car', id, id, { status: before.status, priceCents: before.priceCents }, { status: next.status, priceCents: next.priceCents });
   },
   async softDeleteCar(id, uid) {
+    await ensureDemoLiveCars();
     patchDoc('cars', id, { deletedAt: new Date(), deletedBy: uid, published: false }, uid);
     audit(uid, 'delete', 'car', id, id, null, null);
   },
   async restoreCar(id, uid) {
+    await ensureDemoLiveCars();
     patchDoc('cars', id, { deletedAt: null, deletedBy: null }, uid);
     audit(uid, 'restore', 'car', id, id, null, null);
   },

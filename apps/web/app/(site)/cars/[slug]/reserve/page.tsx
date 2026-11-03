@@ -6,7 +6,7 @@ import { notFound } from '@/lib/navigation';
 import { carTitle, formatAUD, isBookable } from '@sda/shared';
 import { getCarBySlug, getPublicSettings } from '@/lib/data/public';
 import { CarSummary } from '@/components/site/car/car-summary';
-import { telHref } from '@/components/site/lib/format';
+import { hasPrice, telHref } from '@/components/site/lib/format';
 import { ReserveForm } from '@/components/site/reserve/reserve-form';
 import { Container, PageHero } from '@/components/site/primitives';
 
@@ -25,7 +25,8 @@ export default function ReservePage() {
   const title = carTitle(car);
   const deposit = settings.deposit;
   const b = settings.business;
-  const canReserve = isBookable(car.status, car.published) && deposit.enabled;
+  // A price-on-application car can't take an online deposit (no balance to show or charge against).
+  const canReserve = isBookable(car.status, car.published) && deposit.enabled && hasPrice(car);
 
   return (
     <>
@@ -55,7 +56,9 @@ export default function ReservePage() {
                 <h2 className="font-display text-2xl font-extrabold">This car can’t be reserved online</h2>
                 <p className="text-muted-foreground mt-2">
                   {car.status === 'available'
-                    ? 'Online deposits are switched off at the moment.'
+                    ? hasPrice(car)
+                      ? 'Online deposits are switched off at the moment.'
+                      : 'The price for this car is available on application.'
                     : car.status === 'reserved'
                       ? 'Another buyer has already paid a deposit on it.'
                       : 'It has been sold.'}{' '}
@@ -79,10 +82,12 @@ export default function ReservePage() {
                     <dt className="text-muted-foreground">Deposit today</dt>
                     <dd className="sda-num font-semibold">{formatAUD(deposit.amountCents)}</dd>
                   </div>
-                  <div className="flex justify-between">
-                    <dt className="text-muted-foreground">Balance on pickup</dt>
-                    <dd className="sda-num font-semibold">{formatAUD(Math.max(0, car.priceCents - deposit.amountCents))}</dd>
-                  </div>
+                  {hasPrice(car) ? (
+                    <div className="flex justify-between">
+                      <dt className="text-muted-foreground">Balance on pickup</dt>
+                      <dd className="sda-num font-semibold">{formatAUD(Math.max(0, car.priceCents - deposit.amountCents))}</dd>
+                    </div>
+                  ) : null}
                 </dl>
               </CarSummary>
             </div>

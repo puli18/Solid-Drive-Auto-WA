@@ -1,0 +1,22 @@
+{
+  "method": "composite (no AI re-rendering); original photo pixels kept everywhere except the masked glass area",
+  "source": "assets/cars/1/f7ef7267-a40f-49cb-b1a6-2130f8cfdae0.JPG",
+  "mask": "GrabCut (OpenCV) seeded by hand-traced polygons for windscreen and driver side window; headliner, rear-view mirror and windscreen rego sticker protected; luminance rule along the wiper/dash line and for the door-mirror glass.",
+  "fill": "smooth neutral light-grey studio gradient (tones [200, 224, 226, 214], horizon at source y=410), slight per-window glass tint, faint low-frequency reflection (6% of the original glass luminance variation), light grain",
+  "feather_px": 1.2,
+  "watermark": "Galaxy S24+ / time text removed by OpenCV Telea inpaint limited to the text pixels in the bottom-left corner (mostly outside the crop)",
+  "global_adjustments": {
+    "exposure": 1.05,
+    "gamma": 1.18
+  },
+  "crop": {
+    "x": 0,
+    "y": 130,
+    "width": 1496,
+    "height": 1122
+  },
+  "outputs": {
+    "full_res": "assets/generated/stock/mazda3-2012/06.png (1496x1122)",
+    "web": "apps/web/public/images/cars/mazda3-2012/06.webp (1168x880, cwebp -q 80)"
+  }
+}

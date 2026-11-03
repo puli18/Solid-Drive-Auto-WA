@@ -210,7 +210,7 @@ function Reports() {
       </div>
       <p className="text-muted-foreground mt-4 text-xs">
         {DEMO_MODE
-          ? 'Preview: files are built in your browser from the sample data plus your changes.'
+          ? 'Preview: files are built in your browser from the bundled data plus your changes.'
           : 'Download links last 15 minutes. Files are deleted from storage after 24 hours.'}
       </p>
     </>

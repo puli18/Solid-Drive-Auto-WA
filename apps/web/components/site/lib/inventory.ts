@@ -96,12 +96,14 @@ const created = (c: PublicCar) => (c.createdAt ? Date.parse(c.createdAt) : 0);
 export function sortCars(cars: PublicCar[], sort: SortValue): PublicCar[] {
   const list = [...cars];
   const statusRank = (c: PublicCar) => (c.status === 'available' ? 0 : 1);
+  // 0 = not known yet (price on application / year or odometer TBC): those cars sort last.
+  const unknownLast = (a: number, b: number) => Number(a <= 0) - Number(b <= 0);
   const by: Record<SortValue, (a: PublicCar, b: PublicCar) => number> = {
     newest: (a, b) => created(b) - created(a),
-    'price-asc': (a, b) => a.priceCents - b.priceCents,
+    'price-asc': (a, b) => unknownLast(a.priceCents, b.priceCents) || a.priceCents - b.priceCents,
     'price-desc': (a, b) => b.priceCents - a.priceCents,
     'year-desc': (a, b) => b.year - a.year || created(b) - created(a),
-    'km-asc': (a, b) => a.km - b.km,
+    'km-asc': (a, b) => unknownLast(a.km, b.km) || a.km - b.km,
   };
   // Available cars first, reserved after – within the chosen order.
   return list.sort((a, b) => statusRank(a) - statusRank(b) || by[sort](a, b));
@@ -126,7 +128,7 @@ export function filterOptions(cars: PublicCar[]): FilterOptions {
   return {
     makes,
     modelsByMake,
-    years: uniq(cars.map((c) => c.year)).sort((a, b) => b - a),
+    years: uniq(cars.map((c) => c.year).filter((y) => y > 0)).sort((a, b) => b - a),
     bodies: uniq(cars.map((c) => c.bodyType)).sort(),
     transmissions: uniq(cars.map((c) => c.transmission)).sort(),
     fuels: uniq(cars.map((c) => c.fuel)).sort(),
@@ -158,7 +160,10 @@ export function similarCars(all: PublicCar[], car: PublicCar, n = 3): PublicCar[
     .filter((c) => c.id !== car.id && c.status !== 'sold')
     .map((c) => ({
       c,
-      score: (c.bodyType === car.bodyType ? 0 : 1) * 1e9 + Math.abs(c.priceCents - car.priceCents) + (c.status === 'available' ? 0 : 5e8),
+      score:
+        (c.bodyType === car.bodyType ? 0 : 1) * 1e9 +
+        (c.priceCents > 0 && car.priceCents > 0 ? Math.abs(c.priceCents - car.priceCents) : 1e8) +
+        (c.status === 'available' ? 0 : 5e8),
     }))
     .sort((a, b) => a.score - b.score)
     .slice(0, n)

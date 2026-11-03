@@ -6,13 +6,15 @@
  * Firebase mode: Firestore client SDK (loaded lazily, so it stays out of the demo bundle); public reads are
  * allowed by the security rules (published cars, the public settings docs). Results are memoised for 60 s
  * per page session so layout + page loaders share one read.
- * Demo mode: the bundled fixtures (pristine – viewer edits in the admin overlay are not shown publicly).
+ * Demo mode: settings from the bundled demo data (pristine – viewer edits in the admin overlay are not shown
+ * publicly). Cars are never bundled: with a live Firebase config (DEMO_LIVE_CARS, see ./mode) they come from
+ * the same Firestore queries as Firebase mode; without one demo mode has no cars (empty states).
  * Only published, non-deleted cars with status available/reserved/sold are ever returned; dates are ISO strings.
  */
 import type { PublicCar } from '@sda/shared';
 import { isPublicCar, sortNewestFirst, toPublicCar, withSettingsDefaults } from './common';
 import { demoBase } from './demo/store';
-import { DEMO_MODE } from './mode';
+import { CARS_FROM_FIRESTORE, DEMO_MODE } from './mode';
 import type { PublicSettings } from './types';
 
 export type { PublicCar, PublicSettings };
@@ -51,8 +53,12 @@ export interface PublishedCarsOptions {
   limit?: number;
 }
 
-function loadPublishedRows(max: number): Promise<Record<string, unknown>[]> {
-  if (DEMO_MODE) return Promise.resolve(demoBase().cars);
+/**
+ * Raw published car docs (Dates, not ISO strings). Also used by the demo admin to list the live cars
+ * (demo/live-cars.ts). Unauthenticated reads: the rules allow list queries constrained to published == true.
+ */
+export function loadPublishedCarRows(max = 500): Promise<Record<string, unknown>[]> {
+  if (!CARS_FROM_FIRESTORE) return Promise.resolve([]);
   return cached(`cars:${max}`, async () => {
     const { fs, db, rows } = await firestore();
     return rows(await fs.getDocs(fs.query(fs.collection(db, 'cars'), fs.where('published', '==', true), fs.limit(max))));
@@ -61,7 +67,7 @@ function loadPublishedRows(max: number): Promise<Record<string, unknown>[]> {
 
 /** All published cars, newest first. Inventory is small: filter/sort further in memory for /cars. */
 export async function getPublishedCars(opts: PublishedCarsOptions = {}): Promise<PublicCar[]> {
-  const rows = await loadPublishedRows(opts.limit ?? 500);
+  const rows = await loadPublishedCarRows(opts.limit ?? 500);
   return sortNewestFirst(rows.filter((c) => isPublicCar(c) && (opts.includeSold || c.status !== 'sold'))).map(toPublicCar);
 }
 
@@ -72,16 +78,12 @@ export async function getLatestAvailableCars(n = 6): Promise<PublicCar[]> {
 
 /** A published car by slug – sold cars included (their page still loads with a Sold badge). */
 export async function getCarBySlug(slug: string): Promise<PublicCar | null> {
-  let row: Record<string, unknown> | undefined;
-  if (DEMO_MODE) {
-    row = demoBase().cars.find((c) => c.slug === slug);
-  } else {
-    row = await cached(`car:${slug}`, async () => {
-      const { fs, db, rows } = await firestore();
-      const q = fs.query(fs.collection(db, 'cars'), fs.where('slug', '==', slug), fs.where('published', '==', true), fs.limit(1));
-      return rows(await fs.getDocs(q))[0];
-    });
-  }
+  if (!CARS_FROM_FIRESTORE) return null;
+  const row = await cached(`car:${slug}`, async () => {
+    const { fs, db, rows } = await firestore();
+    const q = fs.query(fs.collection(db, 'cars'), fs.where('slug', '==', slug), fs.where('published', '==', true), fs.limit(1));
+    return rows(await fs.getDocs(q))[0];
+  });
   return row && isPublicCar(row) ? toPublicCar(row) : null;
 }
 

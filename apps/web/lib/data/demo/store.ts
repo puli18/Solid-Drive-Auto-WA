@@ -1,10 +1,12 @@
 /**
- * Demo data store: the shared fixtures (`buildDemoDataset`) plus, in the browser, a localStorage
- * overlay holding the viewer's edits. Server code (SSR) only ever sees the pristine fixtures.
+ * Demo data store: the shared fixtures (`buildDemoDataset`: users + settings, no cars), the live cars
+ * read from Firestore (`setDemoLiveCars`, filled by ./live-cars.ts when DEMO_LIVE_CARS) and, in the
+ * browser, a localStorage overlay holding the viewer's edits. Nothing here ever writes to Firestore.
  */
 import { buildDemoDataset, type DemoDataset, type DemoDoc } from '@sda/shared/demo';
 
-export const DEMO_STORAGE_KEY = 'sda-demo-overlay-v1';
+/** v3: cars moved out of the bundle into Firestore, so older overlays (bundled car copies) are discarded. */
+export const DEMO_STORAGE_KEY = 'sda-demo-overlay-v3';
 
 export type DemoCollection = Exclude<keyof DemoDataset, 'settings'>;
 
@@ -14,13 +16,27 @@ interface Overlay {
   settings: Partial<DemoDataset['settings']>;
 }
 
+const clone = <T>(v: T): T => structuredClone(v);
+
 let base: DemoDataset | null = null;
+/** Published cars read from the live project (read-only base layer under the overlay). */
+let liveCars: DemoDoc[] = [];
 let overlay: Overlay | null = null;
 const listeners = new Set<() => void>();
 
 export function demoBase(): DemoDataset {
   base ??= buildDemoDataset();
   return base;
+}
+
+/** Replace the live-cars base layer (called by ./live-cars.ts after reading Firestore). */
+export function setDemoLiveCars(rows: DemoDoc[]) {
+  liveCars = rows.map(clone);
+}
+
+/** Base docs of a collection: bundled fixtures, plus the live cars for `cars`. */
+function baseRows(col: DemoCollection): DemoDoc[] {
+  return col === 'cars' ? [...liveCars, ...demoBase().cars] : demoBase()[col];
 }
 
 const isBrowser = () => typeof window !== 'undefined';
@@ -60,12 +76,10 @@ function persist() {
   listeners.forEach((l) => l());
 }
 
-const clone = <T>(v: T): T => structuredClone(v);
-
-/** All docs of a collection (fixtures + overlay), cloned. */
+/** All docs of a collection (fixtures + live cars + overlay), cloned. */
 export function demoList(col: DemoCollection): DemoDoc[] {
   const ov = loadOverlay().docs[col] ?? {};
-  const rows = new Map(demoBase()[col].map((d) => [d.id, d]));
+  const rows = new Map(baseRows(col).map((d) => [d.id, d]));
   for (const [id, d] of Object.entries(ov)) {
     if (d) rows.set(id, d);
     else rows.delete(id);
@@ -76,7 +90,7 @@ export function demoList(col: DemoCollection): DemoDoc[] {
 export function demoGet(col: DemoCollection, id: string): DemoDoc | null {
   const ov = loadOverlay().docs[col];
   if (ov && id in ov) return ov[id] ? clone(ov[id]!) : null;
-  const d = demoBase()[col].find((x) => x.id === id);
+  const d = baseRows(col).find((x) => x.id === id);
   return d ? clone(d) : null;
 }
 
@@ -99,7 +113,7 @@ export function demoNewId(prefix: string): string {
   return `${prefix}-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
 }
 
-/** Discard every change made in this browser and return to the fixtures. */
+/** Discard every change made in this browser and return to the fixtures (and the live cars). */
 export function resetDemoData() {
   overlay = { docs: {}, settings: {} };
   if (isBrowser()) {

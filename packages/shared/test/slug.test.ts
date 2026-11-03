@@ -18,4 +18,8 @@ describe('slug', () => {
     expect(stockNoFromSlug('2021-toyota-hilux-sr5-sda1001')).toBe('SDA1001');
     expect(carTitle({ year: 2021, make: 'Toyota', model: 'Hilux', variant: 'SR5' })).toBe('2021 Toyota Hilux SR5');
   });
+  it('leaves out a year of 0 (not known yet)', () => {
+    expect(carSlug({ year: 0, make: 'Nissan', model: 'Patrol', variant: 'DX', stockNo: 'SDA1002' })).toBe('nissan-patrol-dx-sda1002');
+    expect(carTitle({ year: 0, make: 'Nissan', model: 'Patrol', variant: 'DX' })).toBe('Nissan Patrol DX');
+  });
 });

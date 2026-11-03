@@ -1,0 +1,22 @@
+{
+  "method": "composite (no AI re-rendering); original photo pixels kept everywhere except the masked glass area",
+  "source": "assets/cars/2/08565a80-3b44-45a6-9a48-dfea2098d69c.JPG",
+  "mask": "GrabCut seeded by hand-traced polygons for windscreen and driver side window; A-pillar, steering-wheel rim, rear-view mirror and door mirror (incl. stick-on blind-spot mirror) protected; small forced/colour-rule regions next to the door mirror.",
+  "fill": "smooth neutral light-grey studio gradient (tones [200, 224, 226, 214], horizon at source y=330), slight per-window glass tint, faint low-frequency reflection (6% of the original glass luminance variation), light grain",
+  "feather_px": 1.2,
+  "watermark": "Galaxy S24+ / time text removed by OpenCV Telea inpaint limited to the text pixels in the bottom-left corner (mostly outside the crop)",
+  "global_adjustments": {
+    "exposure": 1.03,
+    "gamma": 1.12
+  },
+  "crop": {
+    "x": 0,
+    "y": 150,
+    "width": 1496,
+    "height": 1122
+  },
+  "outputs": {
+    "full_res": "assets/generated/stock/nissan-patrol-dx/09.png (1496x1122)",
+    "web": "apps/web/public/images/cars/nissan-patrol-dx/09.webp (1168x880, cwebp -q 80)"
+  }
+}

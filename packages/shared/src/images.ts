@@ -1,6 +1,6 @@
 /**
  * Image id → URL resolution shared by web (and functions for emails/feeds).
- * - `local:cars/car-01.webp` → `/images/cars/car-01.webp` (seed / dev assets in apps/web/public/images)
+ * - `local:cars/mazda3-2012/01.webp` → `/images/cars/mazda3-2012/01.webp` (bundled assets in apps/web/public/images)
  * - any other id → `${deliveryUrl}/${id}/${variant}` (Cloudflare Images delivery URL, variants thumb/card/full)
  */
 import { type ImageVariant, LOCAL_IMAGE_PREFIX } from './constants';

@@ -3,7 +3,6 @@ import type { LoaderData } from '@/lib/route';
 import { Img } from '@/components/img';
 import Link from '@/components/link';
 import { ArrowRight, Clock, MapPin, Phone, ShieldCheck } from 'lucide-react';
-import { formatAUD } from '@sda/shared';
 import { getPublishedCars, getPublicSettings } from '@/lib/data/public';
 import { carCoverUrl } from '@/lib/images';
 import { CategoryRail } from '@/components/site/home/category-rail';
@@ -12,11 +11,11 @@ import { HeroSearch } from '@/components/site/home/hero-search';
 import { LatestCars } from '@/components/site/home/latest-cars';
 import { FinanceCalculator } from '@/components/site/finance-calculator';
 import { EnquiryForm } from '@/components/site/forms/enquiry-form';
-import { carName, hoursRows, mapsUrl, telHref, transmissionLabel } from '@/components/site/lib/format';
+import { carName, formatPrice, formatYear, hasPrice, hoursRows, mapsUrl, TBC, telHref, transmissionLabel } from '@/components/site/lib/format';
 import { CATEGORIES, filterOptions } from '@/components/site/lib/inventory';
 import { Container, Headline, Kicker, LogoMark } from '@/components/site/primitives';
 
-const PRICE_STEPS = [15_000, 20_000, 25_000, 30_000, 40_000, 50_000, 60_000, 80_000, 100_000];
+const PRICE_STEPS = [5_000, 7_500, 10_000, 15_000, 20_000, 25_000, 30_000, 40_000, 50_000, 60_000, 80_000, 100_000];
 
 export async function loader() {
   return Promise.all([getPublishedCars().catch(() => []), getPublicSettings()]);
@@ -28,8 +27,12 @@ export default function HomePage() {
   const available = cars.filter((c) => c.status === 'available');
   const opts = filterOptions(cars);
   const priceSteps = PRICE_STEPS.filter((p, i) => p <= opts.maxPrice || PRICE_STEPS[i - 1]! < opts.maxPrice);
+  // Featured = the priciest available car (price-on-application cars sort last).
   const featured = [...available].sort((a, b2) => b2.priceCents - a.priceCents)[0];
-  const sortedPrices = available.map((c) => c.priceCents).sort((a, z) => a - z);
+  const sortedPrices = available
+    .filter(hasPrice)
+    .map((c) => c.priceCents)
+    .sort((a, z) => a - z);
   const medianPrice = sortedPrices[Math.floor(sortedPrices.length / 2)] ?? 3_000_000;
   const categories = CATEGORIES.map((c) => ({
     key: c.key,
@@ -308,11 +311,17 @@ export default function HomePage() {
 
                 <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-5 border-y border-white/10 py-6">
                   <Stat label="Odometer">
-                    <CountUp value={featured.km} className="sda-num" />
-                    <span className="text-muted-foreground ml-1 text-sm font-semibold">km</span>
+                    {featured.km > 0 ? (
+                      <>
+                        <CountUp value={featured.km} className="sda-num" />
+                        <span className="text-muted-foreground ml-1 text-sm font-semibold">km</span>
+                      </>
+                    ) : (
+                      TBC
+                    )}
                   </Stat>
                   <Stat label="Year">
-                    <span className="sda-num">{featured.year}</span>
+                    <span className="sda-num">{formatYear(featured.year)}</span>
                   </Stat>
                   <Stat label="Gearbox">
                     {transmissionLabel(featured.transmission)}
@@ -323,7 +332,7 @@ export default function HomePage() {
                   <div>
                     <p className="text-muted-foreground text-xs">Price</p>
                     <p className="font-display sda-num text-4xl font-black text-white" style={{ fontStretch: '112%' }}>
-                      {formatAUD(featured.priceCents)}
+                      {formatPrice(featured.priceCents)}
                     </p>
                   </div>
                   <Link

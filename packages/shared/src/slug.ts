@@ -20,7 +20,8 @@ export interface CarSlugInput {
 }
 
 export function carSlug(car: CarSlugInput): string {
-  return [car.year, car.make, car.model, car.variant ?? '', car.stockNo]
+  // A year of 0 means "not known yet" and is left out.
+  return [Number(car.year) ? car.year : '', car.make, car.model, car.variant ?? '', car.stockNo]
     .map((p) => slugify(String(p)))
     .filter(Boolean)
     .join('-');
@@ -32,7 +33,7 @@ export function stockNoFromSlug(slug: string): string | null {
   return last ? last.toUpperCase() : null;
 }
 
-/** Human title used in listings and Stripe line items, e.g. "2021 Toyota Hilux SR5". */
+/** Human title used in listings and Stripe line items, e.g. "2021 Toyota Hilux SR5" (a 0 year is left out). */
 export function carTitle(car: {
   year: number;
   make: string;

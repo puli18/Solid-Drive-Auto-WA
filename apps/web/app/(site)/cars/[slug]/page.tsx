@@ -12,7 +12,18 @@ import { CarCard, StatusBadge } from '@/components/site/car-card';
 import { CarGallery } from '@/components/site/car/gallery';
 import { EnquireDialog } from '@/components/site/car/enquire-dialog';
 import { FinanceCalculator } from '@/components/site/finance-calculator';
-import { bodyLabel, carName, formatKm, fuelLabel, paragraphs, transmissionLabel } from '@/components/site/lib/format';
+import {
+  bodyLabel,
+  CALL_FOR_PRICE,
+  carName,
+  formatKm,
+  formatPrice,
+  formatYear,
+  fuelLabel,
+  hasPrice,
+  paragraphs,
+  transmissionLabel,
+} from '@/components/site/lib/format';
 import { similarCars } from '@/components/site/lib/inventory';
 import { Container, Crumbs, Headline } from '@/components/site/primitives';
 
@@ -23,8 +34,9 @@ export async function loader({ params }: LoaderFunctionArgs) {
 }
 
 export function meta({ car }: LoaderData<typeof loader>): Metadata {
-  const title = `${carTitle(car)} – ${formatAUD(car.priceCents)}`;
-  const description = `${carTitle(car)} for sale in Perth: ${formatKm(car.km)}, ${transmissionLabel(car.transmission).toLowerCase()}, ${fuelLabel(car.fuel).toLowerCase()}. Stock no ${car.stockNo}. Book a test drive online.`;
+  const title = `${carTitle(car)} – ${formatPrice(car.priceCents)}`;
+  const km = car.km > 0 ? `${formatKm(car.km)}, ` : '';
+  const description = `${carTitle(car)} for sale in Perth: ${km}${transmissionLabel(car.transmission).toLowerCase()}, ${fuelLabel(car.fuel).toLowerCase()}. Stock no ${car.stockNo}. Book a test drive online.`;
   const cover = sortCarImages(car.images ?? [])[0];
   const image = cover ? absoluteCarImageUrl(cover.id, 'full') : `${publicEnv.siteUrl}/images/og/default.webp`;
   return {
@@ -47,21 +59,21 @@ function carJsonLd(car: PublicCar, dealer: { name: string; phone: string; addres
     brand: { '@type': 'Brand', name: car.make },
     model: car.model,
     vehicleConfiguration: car.variant || undefined,
-    vehicleModelDate: String(car.year),
+    vehicleModelDate: car.year > 0 ? String(car.year) : undefined,
     bodyType: bodyLabel(car.bodyType),
     color: car.colour || undefined,
     fuelType: fuelLabel(car.fuel),
     vehicleTransmission: transmissionLabel(car.transmission),
     vehicleEngine: car.engine ? { '@type': 'EngineSpecification', name: car.engine } : undefined,
     vehicleIdentificationNumber: car.vin || undefined,
-    mileageFromOdometer: { '@type': 'QuantitativeValue', value: car.km, unitCode: 'KMT' },
+    mileageFromOdometer: car.km > 0 ? { '@type': 'QuantitativeValue', value: car.km, unitCode: 'KMT' } : undefined,
     itemCondition: 'https://schema.org/UsedCondition',
     sku: car.stockNo,
     description: car.description || undefined,
     offers: {
       '@type': 'Offer',
-      price: (car.priceCents / 100).toFixed(2),
-      priceCurrency: 'AUD',
+      // Price on application: no price in the structured data.
+      ...(hasPrice(car) ? { price: (car.priceCents / 100).toFixed(2), priceCurrency: 'AUD' } : {}),
       url: `${publicEnv.siteUrl}/cars/${car.slug}`,
       availability:
         car.status === 'available'
@@ -80,7 +92,8 @@ export default function CarPage() {
   const b = settings.business;
   const title = carTitle(car);
   const bookable = isBookable(car.status, car.published);
-  const canReserve = bookable && settings.deposit.enabled;
+  const priced = hasPrice(car);
+  const canReserve = bookable && settings.deposit.enabled && priced;
   const images = sortCarImages(car.images ?? []).map((img, i) => ({
     src: carImageUrl(img.id, 'full'),
     alt: img.alt || `${title} – photo ${i + 1}`,
@@ -88,7 +101,7 @@ export default function CarPage() {
   const gallery = images.length ? images : [{ src: '/placeholder-car.svg', alt: `${title} – photo coming soon` }];
   const similar = similarCars(all, car, 3);
   const specs: [string, React.ReactNode][] = [
-    ['Year', car.year],
+    ['Year', formatYear(car.year)],
     ['Make', car.make],
     ['Model', car.model],
     ['Variant', car.variant || '—'],
@@ -125,7 +138,7 @@ export default function CarPage() {
               {car.variant ? <p className="text-muted-foreground mt-2 text-lg">{car.variant}</p> : null}
 
               <p className="font-display sda-num mt-6 text-5xl font-black text-white" style={{ fontStretch: '112%' }}>
-                {formatAUD(car.priceCents)}
+                {formatPrice(car.priceCents)}
               </p>
 
               <ul className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-xl bg-white/10 text-sm">
@@ -247,8 +260,10 @@ export default function CarPage() {
               <h2 className="font-display text-2xl font-extrabold" style={{ fontStretch: '108%' }}>
                 Estimate repayments
               </h2>
-              <p className="text-muted-foreground mt-1 mb-4 text-sm">Pre-filled with this car’s price.</p>
-              <FinanceCalculator compact priceCents={car.priceCents} ratePct={settings.finance.indicativeRatePct} disclaimer={settings.finance.disclaimer} />
+              <p className="text-muted-foreground mt-1 mb-4 text-sm">
+                {priced ? 'Pre-filled with this car’s price.' : `${CALL_FOR_PRICE} on this car – enter an amount to see an estimate.`}
+              </p>
+              <FinanceCalculator compact priceCents={priced ? car.priceCents : undefined} ratePct={settings.finance.indicativeRatePct} disclaimer={settings.finance.disclaimer} />
             </div>
           </aside>
         </Container>
@@ -280,7 +295,7 @@ export default function CarPage() {
           <div className="flex items-center gap-3">
             <div className="min-w-0 flex-1">
               <p className="truncate text-xs text-black/60">{carName(car)}</p>
-              <p className="font-display sda-num text-xl font-extrabold">{formatAUD(car.priceCents)}</p>
+              <p className="font-display sda-num text-xl font-extrabold">{formatPrice(car.priceCents)}</p>
             </div>
             <Link
               href={`/cars/${car.slug}/book`}

@@ -29,6 +29,7 @@ import {
   type FieldIssue,
 } from '../functions';
 import { withSettingsDefaults } from './common';
+import { ensureDemoLiveCars } from './demo/live-cars';
 import { demoGet, demoGetSettings, demoList, demoNewId, demoPut } from './demo/store';
 import { DEMO_MODE } from './mode';
 
@@ -190,6 +191,7 @@ export async function runAction<N extends CallableName>(name: N, input: Callable
   if (!parsed.success) {
     throw new CallableValidationError(parsed.error.issues.map((i) => ({ path: i.path.join('.'), message: i.message })));
   }
+  await ensureDemoLiveCars(); // the simulations look cars up in the demo store
   return (demo[name] as (i: unknown) => Promise<CallableOutput<N>>)(parsed.data);
 }
 

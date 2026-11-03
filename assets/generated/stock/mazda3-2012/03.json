@@ -1,0 +1,40 @@
+[
+    {
+        "created_at": "2026-11-02T23:49:02.526464Z",
+        "display_name": "GPT Image 2",
+        "id": "406dc547-2759-4b5b-beb4-d1480d31fdf8",
+        "job_type": "gpt_image_2",
+        "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261102_234902_406dc547-2759-4b5b-beb4-d1480d31fdf8_min.webp",
+        "params": {
+            "aspect_ratio": "4:3",
+            "height": 1744,
+            "medias": [
+                {
+                    "data": {
+                        "id": "c82409de-1ddd-442a-a449-0713d3cbc6d3",
+                        "type": "media_input",
+                        "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/c82409de-1ddd-442a-a449-0713d3cbc6d3.jpg"
+                    },
+                    "role": "image"
+                },
+                {
+                    "data": {
+                        "id": "a6fb86d8-1c64-4609-b375-ed4f8efa8775",
+                        "type": "media_input",
+                        "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/a6fb86d8-1c64-4609-b375-ed4f8efa8775.png"
+                    },
+                    "role": "image"
+                }
+            ],
+            "model": "videotape-alpha",
+            "prompt": "Edit the first image, a real photo of a car for sale, into a professional used-car dealership stock photo. Keep the car EXACTLY as it is in the photo: a red 2012 Mazda3 sedan. Same paint colour, same wheels and tyres, same body shape, trim, lights, grille, badges and accessories, every detail unchanged; same camera angle and viewpoint. Do not redesign, restyle or alter the car in any way. Level the horizon so the car sits upright, and show the whole car fully in frame and centred. Replace the entire background and ground with a clean seamless light-grey studio background and floor, soft even studio lighting, gentle soft ground shadow under the car, photorealistic. Remove the outdoor reflections, the photographer's shadow and any people. Replace every number plate with the dealership plate shown in the second image (black plate with the Solid Drive Auto WA logo), fitted in correct perspective where the original plate was; no registration letters or numbers may remain anywhere. Remove the 'Galaxy S24+' and time watermark text. Add no other text or logos.",
+            "quality": "high",
+            "reference_elements": [],
+            "remove_bg": false,
+            "resolution": "2k",
+            "width": 2336
+        },
+        "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261102_234902_406dc547-2759-4b5b-beb4-d1480d31fdf8.png",
+        "status": "completed"
+    }
+]

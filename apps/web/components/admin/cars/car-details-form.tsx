@@ -64,7 +64,8 @@ export function carToForm(car: CarRecord | null, stockNo = ''): CarFormInput {
     make: car?.make ?? '',
     model: car?.model ?? '',
     variant: car?.variant ?? '',
-    year: car ? String(car.year) : '',
+    // A stored year of 0 means "not known yet": start the field empty so the form asks for it.
+    year: car?.year ? String(car.year) : '',
     bodyType: car?.bodyType ?? ('' as never),
     transmission: car?.transmission ?? 'automatic',
     fuel: car?.fuel ?? 'petrol',

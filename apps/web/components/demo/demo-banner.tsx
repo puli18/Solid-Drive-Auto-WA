@@ -22,7 +22,7 @@ export function DemoBanner({ className = '' }: { className?: string }) {
         type="button"
         disabled={!dirty}
         onClick={() => {
-          if (window.confirm('Discard all changes made in this browser and restore the sample data?')) resetDemoData();
+          if (window.confirm('Discard all changes made in this browser and restore the original data?')) resetDemoData();
         }}
         className="rounded-full border border-white/25 px-2.5 py-0.5 font-medium hover:bg-white/10 disabled:opacity-40"
       >

@@ -177,7 +177,7 @@ function BookingTab() {
             return (
               <li key={d} className="flex flex-col gap-2 py-3 sm:flex-row sm:items-start">
                 <label className="flex w-40 shrink-0 items-center gap-3 pt-1.5 text-sm font-medium">
-                  <Switch checked={open} onCheckedChange={(c) => setDay(d, c ? [{ start: '09:00', end: '17:00' }] : [])} aria-label={`${DAY_LABEL[d]} open`} />
+                  <Switch checked={open} onCheckedChange={(c) => setDay(d, c ? [{ start: '09:00', end: '17:30' }] : [])} aria-label={`${DAY_LABEL[d]} open`} />
                   {DAY_LABEL[d]}
                 </label>
                 {open ? (
@@ -191,7 +191,7 @@ function BookingTab() {
                           <Button variant="ghost" size="icon-sm" aria-label="Remove range" onClick={() => setDay(d, ranges.filter((_, j) => j !== i))}><X /></Button>
                         )}
                         {i === ranges.length - 1 && ranges.length < 4 && (
-                          <Button variant="ghost" size="icon-sm" aria-label="Add range" onClick={() => setDay(d, [...ranges, { start: '13:00', end: '17:00' }])}><Plus /></Button>
+                          <Button variant="ghost" size="icon-sm" aria-label="Add range" onClick={() => setDay(d, [...ranges, { start: '13:00', end: '17:30' }])}><Plus /></Button>
                         )}
                       </div>
                     ))}

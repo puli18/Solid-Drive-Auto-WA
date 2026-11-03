@@ -1,0 +1,40 @@
+[
+    {
+        "created_at": "2026-11-02T23:54:09.058487Z",
+        "display_name": "GPT Image 2",
+        "id": "5f55bfec-d940-40a7-9b21-cbabe0b0d2f5",
+        "job_type": "gpt_image_2",
+        "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261102_235409_5f55bfec-d940-40a7-9b21-cbabe0b0d2f5_min.webp",
+        "params": {
+            "aspect_ratio": "4:3",
+            "height": 1744,
+            "medias": [
+                {
+                    "data": {
+                        "id": "9d4f6822-b603-4070-8de3-40600075ec0a",
+                        "type": "media_input",
+                        "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/9d4f6822-b603-4070-8de3-40600075ec0a.jpg"
+                    },
+                    "role": "image"
+                },
+                {
+                    "data": {
+                        "id": "62e4fd68-251b-45de-ac3a-e1feb6fc8336",
+                        "type": "media_input",
+                        "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/62e4fd68-251b-45de-ac3a-e1feb6fc8336.png"
+                    },
+                    "role": "image"
+                }
+            ],
+            "model": "videotape-alpha",
+            "prompt": "Edit the first image, a real photo of a car for sale, into a professional used-car dealership stock photo. Keep the car EXACTLY as it is in the photo: a white 2007 Mitsubishi Lancer sedan with its black side stripe decals and alloy wheels. Same paint colour, same wheels and tyres, same body shape, trim, lights, grille, badges and accessories, every detail unchanged; same camera angle and viewpoint, and the same orientation: do not mirror or flip the image, the car must face the same direction as in the photo. Do not redesign, restyle or alter the car in any way. Level the horizon so the car sits upright, and show the whole car fully in frame and centred. Replace the entire background and ground with a clean seamless light-grey studio background and floor, soft even studio lighting, gentle soft ground shadow under the car, photorealistic. Remove the outdoor reflections, the photographer's shadow and any people. Replace every number plate with the dealership plate shown in the second image (black plate with the Solid Drive Auto WA logo), fitted in correct perspective where the original plate was; no registration letters or numbers may remain anywhere. Remove the 'Galaxy S24+' and time watermark text. Add no other text or logos.",
+            "quality": "high",
+            "reference_elements": [],
+            "remove_bg": false,
+            "resolution": "2k",
+            "width": 2336
+        },
+        "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261102_235409_5f55bfec-d940-40a7-9b21-cbabe0b0d2f5.png",
+        "status": "completed"
+    }
+]

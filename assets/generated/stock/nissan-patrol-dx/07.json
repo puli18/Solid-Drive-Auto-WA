@@ -1,0 +1,40 @@
+[
+    {
+        "created_at": "2026-11-02T23:52:20.799853Z",
+        "display_name": "GPT Image 2",
+        "id": "4cd0a47a-c634-47bc-aa4e-7766d2911eda",
+        "job_type": "gpt_image_2",
+        "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261102_235220_4cd0a47a-c634-47bc-aa4e-7766d2911eda_min.webp",
+        "params": {
+            "aspect_ratio": "4:3",
+            "height": 1744,
+            "medias": [
+                {
+                    "data": {
+                        "id": "f880c127-f793-4874-b254-c993f0487cab",
+                        "type": "media_input",
+                        "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/f880c127-f793-4874-b254-c993f0487cab.jpg"
+                    },
+                    "role": "image"
+                },
+                {
+                    "data": {
+                        "id": "8d561268-a9f7-4c1f-8608-a7e4d41b1559",
+                        "type": "media_input",
+                        "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/8d561268-a9f7-4c1f-8608-a7e4d41b1559.png"
+                    },
+                    "role": "image"
+                }
+            ],
+            "model": "videotape-alpha",
+            "prompt": "Edit the first image, a real photo of a car for sale, into a professional used-car dealership stock photo. Keep the car EXACTLY as it is in the photo: a white Nissan Patrol GU 4x4 wagon with its exact modifications: lift kit, black wheel-arch flares, black steel wheels with mud-terrain tyres, bull bar with driving lights, snorkel, roof rack with awning, rear-mounted spare wheel, and all existing stickers and decals. Same paint colour, same wheels and tyres, same body shape, trim, lights, grille, badges and accessories, every detail unchanged; same camera angle and viewpoint. Do not redesign, restyle or alter the car in any way. Level the horizon so the car sits upright, and show the whole car fully in frame and centred. Replace the entire background and ground with a clean seamless light-grey studio background and floor, soft even studio lighting, gentle soft ground shadow under the car, photorealistic. Remove the outdoor reflections, the photographer's shadow and any people. Replace every number plate with the dealership plate shown in the second image (black plate with the Solid Drive Auto WA logo), fitted in correct perspective where the original plate was; no registration letters or numbers may remain anywhere. Remove the 'Galaxy S24+' and time watermark text. Add no other text or logos.",
+            "quality": "high",
+            "reference_elements": [],
+            "remove_bg": false,
+            "resolution": "2k",
+            "width": 2336
+        },
+        "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3FMQlzKwTEHA2H7Ee3gWEIgPlBv/hf_20261102_235220_4cd0a47a-c634-47bc-aa4e-7766d2911eda.png",
+        "status": "completed"
+    }
+]

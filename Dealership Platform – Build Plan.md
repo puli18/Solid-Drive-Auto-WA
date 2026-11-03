@@ -172,7 +172,7 @@ Both flows run entirely in Cloud Functions inside Firestore transactions, so two
 3. Remove slots that are in the past, inside `minNoticeHours`, beyond `maxDaysAhead`, on a blackout date, already locked for this car, or at `maxPerSlot` capacity
 4. Return slots as ISO strings with the time zone offset
 
-Defaults (PLACEHOLDER): 45-min slots, 15-min buffer, Mon–Fri 9:00–17:00, Sat 9:00–13:00, max 2 per slot, 2 h notice, 30 days ahead.
+Defaults (PLACEHOLDER): 45-min slots, 15-min buffer, Mon–Fri 9:00–17:30, Sat 9:00–13:00, max 2 per slot, 2 h notice, 30 days ahead.
 
 **Create booking (`createBooking`)**
 

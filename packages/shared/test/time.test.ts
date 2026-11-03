@@ -38,7 +38,7 @@ describe('Perth time helpers', () => {
 });
 
 describe('slot building', () => {
-  it('builds 45-min slots with 15-min buffer Mon–Fri 9–17', () => {
+  it('builds 45-min slots with 15-min buffer Mon–Fri 9:00–17:30', () => {
     const slots = buildDaySlots(settings, '2026-10-27');
     expect(slots.map((s) => s.iso.slice(11, 16))).toEqual([
       '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00',

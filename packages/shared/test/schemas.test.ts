@@ -63,7 +63,7 @@ describe('schemas', () => {
 
 describe('images', () => {
   it('maps local and Cloudflare ids', () => {
-    expect(resolveImageUrl('local:cars/car-01.webp', 'card')).toBe('/images/cars/car-01.webp');
+    expect(resolveImageUrl('local:cars/mazda3-2012/01.webp', 'card')).toBe('/images/cars/mazda3-2012/01.webp');
     expect(resolveImageUrl('abc-123', 'thumb', { deliveryUrl: 'https://imagedelivery.net/HASH/' })).toBe(
       'https://imagedelivery.net/HASH/abc-123/thumb',
     );

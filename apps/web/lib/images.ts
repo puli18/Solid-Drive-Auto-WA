@@ -1,6 +1,6 @@
 /**
  * Car image URLs.
- *   carImageUrl('local:cars/car-01.webp')        → /images/cars/car-01.webp   (seed/dev files in public/images)
+ *   carImageUrl('local:cars/mazda3-2012/01.webp') → /images/cars/mazda3-2012/01.webp (bundled files in public/images)
  *   carImageUrl('<cloudflare-id>', 'thumb')      → ${VITE_CF_IMAGES_DELIVERY_URL}/<id>/thumb
  * Variants: thumb (400w), card (800w), full (1600w).
  *

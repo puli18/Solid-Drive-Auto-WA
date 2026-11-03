@@ -1,0 +1,22 @@
+{
+  "method": "composite (no AI re-rendering); original photo pixels kept everywhere except the masked glass area",
+  "source": "assets/cars/3/c6046fb4-50b6-448f-bc3b-b76d5591310a.JPG",
+  "mask": "GrabCut seeded by hand-traced polygons for the front-left side window and windscreen; headrest, A-pillar, grab handle, rear-view mirror and mount protected; luminance rule along the wiper line.",
+  "fill": "smooth neutral light-grey studio gradient (tones [200, 224, 226, 214], horizon at source y=760), slight per-window glass tint, faint low-frequency reflection (6% of the original glass luminance variation), light grain",
+  "feather_px": 1.2,
+  "watermark": "Galaxy S24+ / time text removed by OpenCV Telea inpaint limited to the text pixels in the bottom-left corner (mostly outside the crop)",
+  "global_adjustments": {
+    "exposure": 1.0,
+    "gamma": 1.1
+  },
+  "crop": {
+    "x": 0,
+    "y": 187,
+    "width": 1496,
+    "height": 1122
+  },
+  "outputs": {
+    "full_res": "assets/generated/stock/mitsubishi-lancer-2007/08.png (1496x1122)",
+    "web": "apps/web/public/images/cars/mitsubishi-lancer-2007/08.webp (1168x880, cwebp -q 80)"
+  }
+}

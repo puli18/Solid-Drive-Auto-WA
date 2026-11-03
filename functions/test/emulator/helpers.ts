@@ -17,7 +17,7 @@ export async function resetAuth() {
 
 export async function seedSettings(booking: Partial<typeof DEFAULT_BOOKING_SETTINGS> & Record<string, unknown> = {}) {
   await db.doc('settings/booking').set({ ...structuredClone(DEFAULT_BOOKING_SETTINGS), ...booking });
-  await db.doc('settings/business').set({ name: 'Solid Drive Auto WA', timezone: 'Australia/Perth', email: 'sales@soliddrive.test', phone: '(08) 9000 0000', gstRate: 10 });
+  await db.doc('settings/business').set({ name: 'Solid Drive Auto WA', timezone: 'Australia/Perth', email: 'sales@soliddrive.test', phone: '0451 847 563', gstRate: 10 });
   await db.doc('settings/deposit').set({ amountCents: 50_000, termsText: 'Non-refundable.', termsVersion: 'v-test', enabled: true });
 }
 

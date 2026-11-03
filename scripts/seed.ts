@@ -1,15 +1,18 @@
 /**
  * `pnpm seed` – resets and seeds the LOCAL Emulator Suite (project demo-solid-drive) with the shared
- * demo dataset (`buildDemoDataset()` in @sda/shared/demo – the same data the demo-mode preview shows).
- * Refuses to run against anything that isn't a demo- project.
+ * demo dataset (`buildDemoDataset()` in @sda/shared/demo: demo users + settings) plus the dealer's stock
+ * (scripts/data/stock.ts via `buildStockCarDocs()` – the same cars `pnpm seed:stock` writes to a real
+ * project). Refuses to run against anything that isn't a demo- project.
  *
  * Flags: --no-reset  keep existing emulator data (documents are overwritten by id).
  */
 import { initializeApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
-import { getFirestore, Timestamp, type WriteBatch } from 'firebase-admin/firestore';
+import { getFirestore, type WriteBatch } from 'firebase-admin/firestore';
 import { EMULATOR_HOST, EMULATOR_PORTS } from '@sda/shared';
 import { buildDemoDataset, type DemoDoc } from '@sda/shared/demo';
+import { toFirestore } from './lib/firestore-admin';
+import { buildStockCarDocs, nextStockNoAfter } from './lib/stock-docs';
 import { seedConfig } from './seed.config';
 
 const PROJECT_ID = seedConfig.projectId;
@@ -23,16 +26,6 @@ const app = initializeApp({ projectId: PROJECT_ID });
 const db = getFirestore(app);
 db.settings({ ignoreUndefinedProperties: true });
 const auth = getAuth(app);
-
-/** Recursively convert Date → Timestamp. */
-function toFirestore(value: unknown): unknown {
-  if (value instanceof Date) return Timestamp.fromDate(value);
-  if (Array.isArray(value)) return value.map(toFirestore);
-  if (value && typeof value === 'object') {
-    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, toFirestore(v)]));
-  }
-  return value;
-}
 
 async function resetEmulators() {
   const fsUrl = `http://${process.env.FIRESTORE_EMULATOR_HOST}/emulator/v1/projects/${PROJECT_ID}/databases/(default)/documents`;
@@ -79,6 +72,8 @@ async function main() {
     throw err;
   }
   const ds = buildDemoDataset();
+  ds.cars = buildStockCarDocs();
+  ds.settings.app = { ...ds.settings.app, nextStockNo: nextStockNoAfter() };
   await seedAuthUsers();
   for (const [id, data] of Object.entries(ds.settings)) await db.doc(`settings/${id}`).set(toFirestore(data) as Record<string, unknown>);
   for (const col of ['users', 'vendors', 'cars', 'carFinancials', 'sales', 'deposits', 'bookings', 'slotLocks', 'slotCounts', 'enquiries', 'auditLog'] as const) {

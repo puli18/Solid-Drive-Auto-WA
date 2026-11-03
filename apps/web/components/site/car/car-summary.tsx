@@ -1,8 +1,8 @@
 import { Img } from '@/components/img';
 import Link from '@/components/link';
-import { formatAUD, type PublicCar } from '@sda/shared';
+import type { PublicCar } from '@sda/shared';
 import { carCoverUrl } from '@/lib/images';
-import { carName, formatKm, transmissionLabel } from '../lib/format';
+import { carName, formatKm, formatPrice, transmissionLabel } from '../lib/format';
 
 /** Compact car summary used beside the booking and reserve flows. */
 export function CarSummary({ car, children }: { car: PublicCar; children?: React.ReactNode }) {
@@ -23,7 +23,7 @@ export function CarSummary({ car, children }: { car: PublicCar; children?: React
           <p className="text-muted-foreground text-sm">
             <span className="sda-num font-mono">{formatKm(car.km)}</span> · {transmissionLabel(car.transmission)}
           </p>
-          <p className="font-display sda-num text-2xl font-extrabold">{formatAUD(car.priceCents)}</p>
+          <p className="font-display sda-num text-2xl font-extrabold">{formatPrice(car.priceCents)}</p>
         </div>
         {children}
       </div>

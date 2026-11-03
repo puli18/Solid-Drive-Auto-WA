@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "dev:demo": "VITE_DEMO_MODE=true VITE_USE_EMULATORS=false vite --host",
+    "dev:demo": "VITE_DEMO_MODE=true VITE_USE_EMULATORS=false VITE_SITE_URL=http://localhost:3000 vite --mode preview --host",
+    "dev:demo:offline": "VITE_DEMO_MODE=true VITE_USE_EMULATORS=false VITE_FIREBASE_PROJECT_ID=demo-solid-drive vite --mode preview --host",
     "build": "SDA_DEPLOY_ENV=production vite build && tsx scripts/generate-sitemap.ts",
-    "build:preview": "VITE_DEMO_MODE=true VITE_USE_EMULATORS=false vite build && VITE_DEMO_MODE=true tsx scripts/generate-sitemap.ts",
+    "build:preview": "VITE_DEMO_MODE=true VITE_USE_EMULATORS=false vite build --mode preview && VITE_DEMO_MODE=true tsx scripts/generate-sitemap.ts --mode preview",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "deploy:preview": "pnpm build:preview && wrangler pages deploy dist --project-name solid-drive-preview"

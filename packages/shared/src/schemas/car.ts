@@ -8,7 +8,7 @@ export const fuelTypeSchema = z.enum(FUEL_TYPES);
 export const transmissionSchema = z.enum(TRANSMISSIONS);
 
 export const carImageSchema = z.object({
-  /** Cloudflare Images id, or `local:cars/car-01.webp` for seed/dev images. */
+  /** Cloudflare Images id, or `local:cars/<car-key>/01.webp` for bundled/dev images. */
   id: z.string().min(1),
   order: z.number().int().nonnegative(),
   isCover: z.boolean().default(false),
@@ -38,15 +38,18 @@ export const carInputSchema = z.object({
   make: z.string().trim().min(1, 'Required').max(40),
   model: z.string().trim().min(1, 'Required').max(60),
   variant: z.string().trim().max(80).optional().default(''),
-  year: zYear,
+  /** 0 = not known yet (shown as "TBC"; a car needs a real year to be made available). */
+  year: zYear.or(z.literal(0)),
   bodyType: bodyTypeSchema,
   transmission: transmissionSchema,
   fuel: fuelTypeSchema,
   engine: z.string().trim().max(60).optional().default(''),
   colour: z.string().trim().max(40).optional().default(''),
+  /** 0 = not known yet (shown as "TBC" on the public site). */
   km: z.number().int().nonnegative().max(2_000_000),
   features: z.array(z.string().trim().min(1).max(80)).max(80).default([]),
   description: z.string().trim().max(10_000).default(''),
+  /** Drive-away price, GST inclusive. 0 = price on application ("Call for price"). */
   priceCents: zCents,
   status: carStatusSchema.default('draft'),
   published: z.boolean().default(false),

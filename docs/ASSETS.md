@@ -23,26 +23,58 @@ All AI imagery generated with Higgsfield `gpt_image_2` (photoreal, moody cinemat
 | `showroom/yard.webp` | 2688x1520 | About/Contact yard at blue hour | `yard.png` | Photorealistic architectural/automotive photography. A clean modern used-car yard in Perth, Western Australia at blue hour, rows of assorted late-model cars neatly lined up, a sleek low glass-and-black-steel showroom building with warm interior glow, string lighting, wet-look concrete, deep blue sky, a hint of red accent lighting. No readable signs, no logos, no text, blank number plates. |
 | `og/default.webp` | 1200x630 | Social share (cropped from 16:9 original, right-anchored) | `og.png` | Dark cinematic minimalist banner: a single sleek car silhouette in rim-lit chrome edges on a near-black background, a faint red glow along the road line, large dark empty space in the upper-left and centre for a logo, deep blacks, cool chrome highlights, subtle smoke. No text, no logos, no badges. |
 
-## Stock cars (`cars/car-NN.webp`, 1168x880, ~4:3)
+## Stock cars
 
-Mapping in `cars/manifest.json`. Originals `car-NN.png` (1k generation). Prompt template: `Professional used-car dealership stock photo: a {colour} {make/model} Hilux dual-cab ute, Australian-market, front three-quarter view, clean seamless light-grey studio background and floor, soft even studio lighting with gentle ground shadow, car fully in frame centred, photorealistic. Generic styling with no brand badges, no logos, no text, blank number plates.`
+The AI-generated sample stock photos (`cars/car-01.webp` ... `car-12.webp`, `cars/manifest.json` and the originals `assets/generated/car-NN.png|json`) were removed when the 20 sample cars were replaced by the dealer's real stock. Real stock photos live in `cars/<car-key>/NN.webp` (01 is the cover) and are referenced as `local:cars/<car-key>/NN.webp` from `packages/shared/src/demo/fixtures.ts`, whose per-car `photos` lists mirror `cars/stock-photos.json`.
 
-| File | Make / model | Colour |
-|---|---|---|
-| `car-01.webp` | Toyota Hilux | white |
-| `car-02.webp` | Ford Ranger | grey |
-| `car-03.webp` | Mazda CX-5 | red |
-| `car-04.webp` | Hyundai i30 | blue |
-| `car-05.webp` | Toyota RAV4 | silver |
-| `car-06.webp` | Kia Sportage | black |
-| `car-07.webp` | Mitsubishi Triton | white |
-| `car-08.webp` | Volkswagen Golf | white |
-| `car-09.webp` | Subaru Outback | green |
-| `car-10.webp` | Nissan Patrol | black |
-| `car-11.webp` | Toyota Corolla | silver |
-| `car-12.webp` | Mazda Mazda3 | grey |
+## Real stock photos (`cars/<car-key>/NN.webp`, 1168x880, 4:3)
 
-Exact per-car prompts: `assets/generated/car-NN.json`.
+Real dealer photos (`assets/cars/1..3`) edited into the same studio style as the sample stock cars. One photo was kept per distinct angle (near-duplicates dropped). Each kept exterior photo was run once through GPT Image 2 (`gpt_image_2`, 4:3, 2k, quality high) as an image edit, with the source photo as the first reference image and, for exterior shots, a wide black number plate built from `brand/logo_with_full_name.png` (car mark left, wordmark right, thin silver border, 1400x420) as the second reference (interiors are composited instead, see below). Results were checked by eye against the source; rejected ones were regenerated (a mirrored side view, an invented window sticker, an angle that duplicated the cover).
+
+Exterior prompt (`{car}` = description of the exact car and its accessories):
+
+`Edit the first image, a real photo of a car for sale, into a professional used-car dealership stock photo. Keep the car EXACTLY as it is in the photo: {car}. Same paint colour, same wheels and tyres, same body shape, trim, lights, grille, badges and accessories, every detail unchanged; same camera angle and viewpoint, and the same orientation: do not mirror or flip the image, the car must face the same direction as in the photo. Do not redesign, restyle or alter the car in any way. Level the horizon so the car sits upright, and show the whole car fully in frame and centred. Replace the entire background and ground with a clean seamless light-grey studio background and floor, soft even studio lighting, gentle soft ground shadow under the car, photorealistic. Remove the outdoor reflections, the photographer's shadow and any people. Replace every number plate with the dealership plate shown in the second image (black plate with the Solid Drive Auto WA logo), fitted in correct perspective where the original plate was; no registration letters or numbers may remain anywhere. Remove the 'Galaxy S24+' and time watermark text. Add no other text or logos.`
+
+Interior shots (Mazda3 06-08, Patrol 08-10, Lancer 06-08) are NOT AI re-renders: they keep the original photo pixels and only the glass is replaced. Per shot (script and config kept outside the repo; method recorded in each `NN.json`):
+
+1. Glass mask: hand-traced polygons for each window (windscreen, side and rear-door windows, plus the door-mirror glass on Mazda 06/07), refined with OpenCV GrabCut, with forced-keep regions for everything in front of or on the glass (rear-view mirrors and mounts, A-pillars, door mirrors, wipers, bonnet scoop, headrests, steering-wheel rim, window division bar, the Mazda windscreen rego sticker and the Patrol "PATROL" windscreen banner, the latter masked by colour). Luminance or colour rules handle the wiper/dash lines and the blown-out windows (Mazda 08, Lancer 07). Each mask was checked as an overlay and in zoomed side-by-sides of the original.
+2. Fill: smooth neutral light-grey studio gradient in the tone of the exterior shots (soft horizon, slight edge falloff), a small per-window glass tint, a faint low-frequency reflection taken from the original glass, and light grain.
+3. Composite: original pixels outside the mask, 1-2 px feathered edge. The "Galaxy S24+" / time watermark is removed by an OpenCV inpaint limited to the text pixels (bottom-left corner, mostly outside the crop).
+4. Only global adjustments on the cabin: mild exposure/gamma (no sharpening, no local edits). Outside the mask the result matches the adjusted original pixel for pixel.
+5. Crop: full-width 4:3 (1496x1122) from the square source at a per-shot vertical offset (0-187 px), then `cwebp -q 80 -resize 1168 880`.
+
+Known leftovers kept from the original: the rear-view mirror reflections (the Patrol 08 mirror shows the photographer), door-mirror reflections on the Patrol 09 (with its stick-on blind-spot mirror), and blown-out highlights on cabin surfaces in Mazda 08 and Lancer 07. The small etched glass maker's mark on the Patrol 09 door glass falls inside the mask and is gone.
+
+Originals and JSON (exact prompt per exterior shot, compositing method per interior shot): `assets/generated/stock/<car-key>/NN.png` + `NN.json`. Web files: `cwebp -q 80 -resize 1168 880`. Alt text: `cars/stock-photos.json`.
+
+| Car key | NN | Angle | Source (`assets/cars/<n>/`) |
+|---|---|---|---|
+| `mazda3-2012` (folder 1) | 01 | front three-quarter (passenger side, cover) | `6cbcf2ba` |
+| | 02 | side | `350d9252` |
+| | 03 | rear three-quarter | `30fe3538` |
+| | 04 | front | `246753e3` |
+| | 05 | front three-quarter (driver side) | `a67d498a` |
+| | 06 | dashboard | `f7ef7267` |
+| | 07 | front seats from passenger door | `d06f0032` |
+| | 08 | rear seats | `f282e1b3` |
+| `nissan-patrol-dx` (folder 2) | 01 | front three-quarter (driver side, cover) | `d3b957a6` |
+| | 02 | side | `ea5dc935` |
+| | 03 | rear three-quarter (passenger side) | `6ff243fe` |
+| | 04 | rear | `1d1aca30` |
+| | 05 | front | `a5614182` |
+| | 06 | front three-quarter (passenger side) | `3169fc57` |
+| | 07 | rear three-quarter (driver side) | `62507656` |
+| | 08 | dashboard | `82c7d07f` |
+| | 09 | driver seat and gear lever | `08565a80` |
+| | 10 | rear seats | `b0fda5d3` |
+| `mitsubishi-lancer-2007` (folder 3) | 01 | front three-quarter (passenger side, cover) | `d5165801` |
+| | 02 | side | `ffc22e9a` |
+| | 03 | rear three-quarter | `aa6d3456` |
+| | 04 | rear | `b833830d` |
+| | 05 | front three-quarter (driver side) | `5d78173f` |
+| | 06 | dashboard | `f4bd2acf` |
+| | 07 | steering wheel and instrument cluster | `dc06bcc6` |
+| | 08 | cabin from rear seat | `c6046fb4` |
 
 ## Brand files (processed from the provided PNGs, not AI-generated)
 

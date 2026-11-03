@@ -1,0 +1,22 @@
+{
+  "method": "composite (no AI re-rendering); original photo pixels kept everywhere except the masked glass area",
+  "source": "assets/cars/3/dc06bcc6-3bb5-428d-b6a7-cf339928eebc.JPG",
+  "mask": "Luminance threshold (blown-out windscreen, lum > 205) above the dash line with small-hole filling; steering wheel, wiper and thin wire kept.",
+  "fill": "smooth neutral light-grey studio gradient (tones [214, 228, 230, 224], horizon at source y=200), slight per-window glass tint, faint low-frequency reflection (6% of the original glass luminance variation), light grain",
+  "feather_px": 1.2,
+  "watermark": "Galaxy S24+ / time text removed by OpenCV Telea inpaint limited to the text pixels in the bottom-left corner (mostly outside the crop)",
+  "global_adjustments": {
+    "exposure": 1.0,
+    "gamma": 1.0
+  },
+  "crop": {
+    "x": 0,
+    "y": 120,
+    "width": 1496,
+    "height": 1122
+  },
+  "outputs": {
+    "full_res": "assets/generated/stock/mitsubishi-lancer-2007/07.png (1496x1122)",
+    "web": "apps/web/public/images/cars/mitsubishi-lancer-2007/07.webp (1168x880, cwebp -q 80)"
+  }
+}

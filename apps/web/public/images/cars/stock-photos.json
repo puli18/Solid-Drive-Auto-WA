@@ -1,0 +1,34 @@
+{
+  "mazda3-2012": [
+    { "file": "01.webp", "alt": "Red 2012 Mazda3 sedan, front three-quarter view" },
+    { "file": "02.webp", "alt": "Red 2012 Mazda3 sedan, side view" },
+    { "file": "03.webp", "alt": "Red 2012 Mazda3 sedan, rear three-quarter view" },
+    { "file": "04.webp", "alt": "Red 2012 Mazda3 sedan, front view" },
+    { "file": "05.webp", "alt": "Red 2012 Mazda3 sedan, front three-quarter view from the driver side" },
+    { "file": "06.webp", "alt": "Red 2012 Mazda3 sedan, dashboard and steering wheel" },
+    { "file": "07.webp", "alt": "Red 2012 Mazda3 sedan, front seats and dashboard from the passenger door" },
+    { "file": "08.webp", "alt": "Red 2012 Mazda3 sedan, rear seats" }
+  ],
+  "nissan-patrol-dx": [
+    { "file": "01.webp", "alt": "White Nissan Patrol DX 4x4 with bull bar and roof rack, front three-quarter view" },
+    { "file": "02.webp", "alt": "White Nissan Patrol DX 4x4, side view" },
+    { "file": "03.webp", "alt": "White Nissan Patrol DX 4x4 with roof rack awning, rear three-quarter view" },
+    { "file": "04.webp", "alt": "White Nissan Patrol DX 4x4 with rear spare wheel, rear view" },
+    { "file": "05.webp", "alt": "White Nissan Patrol DX 4x4 with bull bar and driving lights, front view" },
+    { "file": "06.webp", "alt": "White Nissan Patrol DX 4x4 with snorkel, front three-quarter view from the passenger side" },
+    { "file": "07.webp", "alt": "White Nissan Patrol DX 4x4, rear three-quarter view from the driver side" },
+    { "file": "08.webp", "alt": "White Nissan Patrol DX 4x4, dashboard and steering wheel" },
+    { "file": "09.webp", "alt": "White Nissan Patrol DX 4x4, driver seat and manual gear lever" },
+    { "file": "10.webp", "alt": "White Nissan Patrol DX 4x4, rear seats" }
+  ],
+  "mitsubishi-lancer-2007": [
+    { "file": "01.webp", "alt": "White 2007 Mitsubishi Lancer ES sedan, front three-quarter view" },
+    { "file": "02.webp", "alt": "White 2007 Mitsubishi Lancer ES sedan, side view" },
+    { "file": "03.webp", "alt": "White 2007 Mitsubishi Lancer ES sedan, rear three-quarter view" },
+    { "file": "04.webp", "alt": "White 2007 Mitsubishi Lancer ES sedan, rear view" },
+    { "file": "05.webp", "alt": "White 2007 Mitsubishi Lancer ES sedan, front three-quarter view from the driver side" },
+    { "file": "06.webp", "alt": "White 2007 Mitsubishi Lancer ES sedan, dashboard" },
+    { "file": "07.webp", "alt": "White 2007 Mitsubishi Lancer ES sedan, steering wheel and instrument cluster" },
+    { "file": "08.webp", "alt": "White 2007 Mitsubishi Lancer ES sedan, cabin from the rear seat" }
+  ]
+}
