@@ -10,7 +10,7 @@
     "build:preview": "VITE_DEMO_MODE=true VITE_USE_EMULATORS=false vite build --mode preview && VITE_DEMO_MODE=true tsx scripts/generate-sitemap.ts --mode preview",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "deploy:preview": "pnpm build:preview && wrangler pages deploy dist --project-name solid-drive-preview"
+    "deploy:preview": "pnpm build:preview && wrangler pages deploy dist --project-name solid-drive-auto-wa"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "^5.2.8",

@@ -29,7 +29,7 @@ If you need something in an area you don't own: add a NEW file next to it rather
 
 ## Client preview deploy (demo mode) – required
 
-The owner deploys to Cloudflare Pages (`pnpm --filter web deploy:preview`, https://solid-drive-preview.pages.dev) to show the client a preview before Cloud Functions, Auth, Stripe, Resend or Cloudflare Images are live.
+The owner deploys to Cloudflare Pages (`pnpm --filter web deploy:preview`, https://solid-drive-auto-wa.pages.dev) to show the client a preview before Cloud Functions, Auth, Stripe, Resend or Cloudflare Images are live.
 
 - **Cars live in Firestore, never in the app bundle.** The dealer's stock is seed data in `scripts/data/stock.ts` (imported ONLY by scripts), written by `pnpm seed:stock` (real project, dry run by default) and by `pnpm seed` (emulators). Do not add car data to `@sda/shared` or `apps/web`.
 - `VITE_DEMO_MODE=true` switches the web app to a bundled demo data source for everything except cars: demo users and settings from ONE shared fixture module (`packages/shared/src/demo/`, also used by `scripts/seed.ts`); bookings, enquiries, expenses, vendors, sales, deposits and car financials start empty.

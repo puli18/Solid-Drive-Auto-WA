@@ -128,7 +128,7 @@ pnpm --filter web dev:demo               # optional: dev server in preview mode 
 pnpm --filter web build:preview          # optional local check (demo build) …
 pnpm --filter web preview                # … served locally
 cd apps/web && npx wrangler login        # once – a free Cloudflare account is enough
-pnpm --filter web deploy:preview         # demo build + `wrangler pages deploy dist --project-name solid-drive-preview` → https://solid-drive-preview.pages.dev
+pnpm --filter web deploy:preview         # demo build + `wrangler pages deploy dist --project-name solid-drive-auto-wa` → https://solid-drive-auto-wa.pages.dev (pushes to main also deploy automatically via the Git integration)
 ```
 
 No other env vars are needed (`.env.preview` is committed; Firebase web config is public). Demo mode must never be used for production: `pnpm build` sets `SDA_DEPLOY_ENV=production` and `vite.config.ts` fails the build if demo mode is on.
