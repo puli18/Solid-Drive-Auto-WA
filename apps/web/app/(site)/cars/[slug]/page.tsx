@@ -124,7 +124,7 @@ export default function CarPage() {
       <section className="dark bg-brand-black text-foreground">
         <Container className="pt-[calc(var(--sda-header-h)+1.5rem)] pb-12 sm:pb-16">
           <Crumbs items={[{ href: '/cars', label: 'Cars for sale' }, { href: `/cars/${car.slug}`, label: title }]} />
-          <div className="mt-6 grid gap-8 lg:grid-cols-[1.45fr_1fr] lg:gap-12">
+          <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)] lg:gap-12">
             <CarGallery images={gallery} title={title} />
 
             <div className="flex flex-col">
@@ -209,7 +209,7 @@ export default function CarPage() {
       </section>
 
       <section className="bg-background py-14 sm:py-20">
-        <Container className="grid gap-12 lg:grid-cols-[1.45fr_1fr] lg:gap-12">
+        <Container className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)] lg:gap-12">
           <div className="space-y-14">
             {car.description ? (
               <div>
