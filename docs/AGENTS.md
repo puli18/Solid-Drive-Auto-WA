@@ -37,7 +37,17 @@ The owner deploys to Cloudflare Pages (`pnpm --filter web deploy:preview`, https
 - All data access goes through one repository layer in `apps/web/lib/data/` with two adapters (Firebase, demo). Pages and components never import Firestore directly. The `local:` image IDs already resolve to `/images/...`, which works on the preview.
 - Public site in demo mode: every page renders from the fixtures plus the live cars. Forms (enquiry, trade-in, booking, reserve) validate with the zod schema and show the real success state, but don't send anything; availability slots are computed in-browser from `settings/booking` with the shared helpers. Reserve shows a "Demo – no payment taken" step instead of redirecting to Stripe.
 - Admin in demo mode: login accepts the demo admin and staff accounts (shown on the login screen), the role switch works, and edits persist only in the viewer's browser (localStorage overlay on the fixtures and live cars) with a visible "Demo mode – changes are only saved in this browser" banner and a reset button. Excel exports may be generated client-side with exceljs in demo mode.
-- A small "Preview" badge is visible on both sites in demo mode. Demo mode must never be on in production.
+- A small "Preview" badge is visible on both sites in demo mode, except on the real domain. Demo mode must never be on in a `pnpm build` (production) build.
+
+## Live domain (soliddriveauto.com.au) – SEO
+
+Until Cloud Functions are live, the public domain is served by the same demo-mode build as the preview (Cloudflare Pages project `solid-drive-auto-wa`, Git-connected: every push to `main` deploys with `pnpm --filter web build:preview`; it is served on both the domain and `solid-drive-auto-wa.pages.dev`).
+
+- `VITE_SITE_URL=https://soliddriveauto.com.au` (canonical tags, sitemap, schema.org) and `VITE_ALLOW_INDEXING=true` (`INDEXABLE` in `lib/data/mode.ts`) in `.env.preview`. The pages.dev hosts are kept out of Google by host rules in `public/_headers`.
+- `FORMS_OFFLINE` (demo mode AND served from the `VITE_SITE_URL` host): the enquiry, trade-in, booking and reserve forms render `components/site/forms/call-us.tsx` (call / text) and the car page CTAs become call/text links, because nothing would be delivered. pages.dev keeps the working demo forms. Any new form must do the same.
+- Placeholder contact details (`.test` email, all-zero ABN) are never shown publicly (`isRealEmail` / `isRealAbn`, `components/site/lib/seo.ts`).
+- `scripts/prerender.ts` (run after `vite build`) writes `dist/<route>.html` for every public page and published car (head tags + JSON-LD + a plain-HTML content snapshot inside `#root`), `dist/spa/index.html`, `sitemap.xml` and `robots.txt`. Titles/descriptions come from the route modules' `metadata` / `meta()`; JSON-LD from `components/site/lib/seo.ts`, shared with the pages. New public pages go in its `PAGES` list. Cars added after a build still work (SPA fallback) and are pre-rendered on the next deploy.
+- `public/_redirects` has NO catch-all rewrite: Pages applies rewrites before static files, so `/* … 200` would hide the pre-rendered pages.
 
 ## Conventions
 

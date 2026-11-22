@@ -6,16 +6,17 @@ import { defineConfig, loadEnv, type Plugin } from 'vite';
 export default defineConfig(({ command, mode }) => {
   const env = { ...loadEnv(mode, process.cwd(), 'VITE_'), ...process.env };
   const demo = env.VITE_DEMO_MODE === 'true';
+  const indexable = !demo || env.VITE_ALLOW_INDEXING === 'true';
 
   // Demo mode (bundled fixtures, no Firebase) is for client previews only – never production.
   if (command === 'build' && demo && process.env.SDA_DEPLOY_ENV === 'production') {
     throw new Error('VITE_DEMO_MODE=true is not allowed for a production build');
   }
 
-  /** Preview (demo) deploys must never be indexed – also for crawlers that don't run JS. */
+  /** Demo deploys are not indexed unless VITE_ALLOW_INDEXING=true – also for crawlers that don't run JS. */
   const noindexInDemo: Plugin = {
     name: 'sda-noindex-demo',
-    transformIndexHtml: (html) => (demo ? html.replace('</head>', '    <meta name="robots" content="noindex, nofollow" />\n  </head>') : html),
+    transformIndexHtml: (html) => (!indexable ? html.replace('</head>', '    <meta name="robots" content="noindex, nofollow" />\n  </head>') : html),
   };
 
   return {

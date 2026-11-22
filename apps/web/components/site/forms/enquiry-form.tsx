@@ -1,12 +1,13 @@
-import { useRef, useState } from 'react';
+import { type ComponentProps, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { CheckCircle2 } from 'lucide-react';
 import { createEnquiryInput, type CallableInput } from '@sda/shared';
 import { Form } from '@/components/ui/form';
-import { DEMO_MODE, runAction } from '@/lib/data';
+import { DEMO_MODE, FORMS_OFFLINE, runAction } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import { applyActionError, DemoNote, FormAlert, sharedResolver, SubmitButton, TextField } from './form-kit';
 import { Turnstile, type TurnstileHandle } from './turnstile';
+import { CallUs } from './call-us';
 
 type Values = CallableInput<'createEnquiry'>;
 
@@ -14,7 +15,12 @@ type Values = CallableInput<'createEnquiry'>;
  * General enquiry (optionally about one car). Validates with the shared `createEnquiryInput` schema and
  * calls `createEnquiry` (simulated in demo mode – nothing is sent).
  */
-export function EnquiryForm({
+export function EnquiryForm(props: ComponentProps<typeof EnquiryFormFields>) {
+  if (FORMS_OFFLINE) return <CallUs carTitle={props.carTitle} tone={props.tone} className={props.className} />;
+  return <EnquiryFormFields {...props} />;
+}
+
+function EnquiryFormFields({
   carId,
   carTitle,
   defaultMessage = '',

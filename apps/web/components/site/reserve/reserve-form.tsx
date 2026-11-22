@@ -1,14 +1,15 @@
 import Link from '@/components/link';
-import { useRef, useState } from 'react';
+import { type ComponentProps, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { ArrowRight, Lock, ShieldAlert } from 'lucide-react';
 import { type CallableInput, createDepositCheckoutInput, formatAUD } from '@sda/shared';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { DEMO_MODE, runAction } from '@/lib/data';
+import { DEMO_MODE, FORMS_OFFLINE, runAction } from '@/lib/data';
 import { applyActionError, FormAlert, sharedResolver, SubmitButton, TextField } from '../forms/form-kit';
 import { Turnstile, type TurnstileHandle } from '../forms/turnstile';
 import { paragraphs } from '../lib/format';
+import { CallUs } from '../forms/call-us';
 
 type Values = CallableInput<'createDepositCheckout'>;
 
@@ -16,7 +17,11 @@ type Values = CallableInput<'createDepositCheckout'>;
  * Reserve with a fixed, non-refundable deposit. Validates with `createDepositCheckoutInput`, then
  * `createDepositCheckout` returns the Stripe Checkout URL. In demo mode a "no payment taken" step is shown first.
  */
-export function ReserveForm({
+export function ReserveForm(props: ComponentProps<typeof ReserveFormFields>) {
+  return FORMS_OFFLINE ? <CallUs topic="reserve" carTitle={props.carTitle} /> : <ReserveFormFields {...props} />;
+}
+
+function ReserveFormFields({
   carId,
   carTitle,
   amountCents,

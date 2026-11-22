@@ -3,8 +3,9 @@ import type { LoaderData } from '@/lib/route';
 import { type Metadata, useJsonLd } from '@/lib/meta';
 import Link from '@/components/link';
 import { notFound } from '@/lib/navigation';
-import { ArrowRight, CalendarCheck, Check, Lock } from 'lucide-react';
-import { carTitle, formatAUD, isBookable, type PublicCar, sortCarImages } from '@sda/shared';
+import { ArrowRight, CalendarCheck, Check, Lock, MessageSquare, Phone } from 'lucide-react';
+import { FORMS_OFFLINE } from '@/lib/data/mode';
+import { carTitle, formatAUD, isBookable, sortCarImages } from '@sda/shared';
 import { getCarBySlug, getPublishedCars, getPublicSettings } from '@/lib/data/public';
 import { absoluteCarImageUrl, carImageUrl } from '@/lib/images';
 import { publicEnv } from '@/lib/env';
@@ -22,9 +23,12 @@ import {
   fuelLabel,
   hasPrice,
   paragraphs,
+  smsHref,
+  telHref,
   transmissionLabel,
 } from '@/components/site/lib/format';
 import { similarCars } from '@/components/site/lib/inventory';
+import { breadcrumbJsonLd, carJsonLd, carSeo } from '@/components/site/lib/seo';
 import { Container, Crumbs, Headline } from '@/components/site/primitives';
 
 export async function loader({ params }: LoaderFunctionArgs) {
@@ -34,57 +38,17 @@ export async function loader({ params }: LoaderFunctionArgs) {
 }
 
 export function meta({ car }: LoaderData<typeof loader>): Metadata {
-  const title = `${carTitle(car)} – ${formatPrice(car.priceCents)}`;
-  const km = car.km > 0 ? `${formatKm(car.km)}, ` : '';
-  const description = `${carTitle(car)} for sale in Perth: ${km}${transmissionLabel(car.transmission).toLowerCase()}, ${fuelLabel(car.fuel).toLowerCase()}. Stock no ${car.stockNo}. Book a test drive online.`;
-  const cover = sortCarImages(car.images ?? [])[0];
-  const image = cover ? absoluteCarImageUrl(cover.id, 'full') : `${publicEnv.siteUrl}/images/og/default.webp`;
+  const { name, title, description, path, image } = carSeo(car, publicEnv.siteUrl, carImage);
   return {
     title,
     description,
-    alternates: { canonical: `/cars/${car.slug}` },
-    openGraph: { type: 'website', title, description, url: `/cars/${car.slug}`, images: [{ url: image, alt: carTitle(car) }] },
+    alternates: { canonical: path },
+    openGraph: { type: 'website', title, description, url: path, images: [{ url: image, alt: name }] },
     twitter: { card: 'summary_large_image', title, description, images: [image] },
   };
 }
 
-function carJsonLd(car: PublicCar, dealer: { name: string; phone: string; address: string }) {
-  const images = sortCarImages(car.images ?? []).map((i) => absoluteCarImageUrl(i.id, 'full'));
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'Car',
-    name: carTitle(car),
-    url: `${publicEnv.siteUrl}/cars/${car.slug}`,
-    image: images,
-    brand: { '@type': 'Brand', name: car.make },
-    model: car.model,
-    vehicleConfiguration: car.variant || undefined,
-    vehicleModelDate: car.year > 0 ? String(car.year) : undefined,
-    bodyType: bodyLabel(car.bodyType),
-    color: car.colour || undefined,
-    fuelType: fuelLabel(car.fuel),
-    vehicleTransmission: transmissionLabel(car.transmission),
-    vehicleEngine: car.engine ? { '@type': 'EngineSpecification', name: car.engine } : undefined,
-    vehicleIdentificationNumber: car.vin || undefined,
-    mileageFromOdometer: car.km > 0 ? { '@type': 'QuantitativeValue', value: car.km, unitCode: 'KMT' } : undefined,
-    itemCondition: 'https://schema.org/UsedCondition',
-    sku: car.stockNo,
-    description: car.description || undefined,
-    offers: {
-      '@type': 'Offer',
-      // Price on application: no price in the structured data.
-      ...(hasPrice(car) ? { price: (car.priceCents / 100).toFixed(2), priceCurrency: 'AUD' } : {}),
-      url: `${publicEnv.siteUrl}/cars/${car.slug}`,
-      availability:
-        car.status === 'available'
-          ? 'https://schema.org/InStock'
-          : car.status === 'reserved'
-            ? 'https://schema.org/LimitedAvailability'
-            : 'https://schema.org/SoldOut',
-      seller: { '@type': 'AutoDealer', name: dealer.name, telephone: dealer.phone, address: dealer.address },
-    },
-  };
-}
+const carImage = (id: string) => absoluteCarImageUrl(id, 'full');
 
 export default function CarPage() {
   const { car, settings, all } = useLoaderData() as LoaderData<typeof loader>;
@@ -116,8 +80,8 @@ export default function CarPage() {
   if (car.rego) specs.push(['Rego', <span key="rego" className="font-mono">{car.rego}</span>]);
   if (car.vin) specs.push(['VIN', <span key="vin" className="font-mono text-xs break-all sm:text-sm">{car.vin}</span>]);
 
-  const jsonLd = carJsonLd(car, { name: b.name, phone: b.phone, address: `${b.address.line1}, ${b.address.suburb} ${b.address.state} ${b.address.postcode}` });
-  useJsonLd(jsonLd);
+  useJsonLd(carJsonLd(car, b, publicEnv.siteUrl, carImage));
+  useJsonLd(breadcrumbJsonLd([{ name: 'Home', path: '/' }, { name: 'Cars for sale', path: '/cars' }, { name: title, path: `/cars/${car.slug}` }], publicEnv.siteUrl));
 
   return (
     <>
@@ -149,7 +113,29 @@ export default function CarPage() {
               </ul>
 
               <div className="mt-8 space-y-3">
-                {bookable ? (
+                {FORMS_OFFLINE ? (
+                  <>
+                    <a
+                      href={telHref(b.phone)}
+                      className="sda-press bg-brand-red hover:bg-brand-red-hover flex h-14 items-center justify-center gap-2 rounded-full text-base font-semibold text-white"
+                    >
+                      <Phone className="size-5" aria-hidden />
+                      Call <span className="sda-num">{b.phone}</span>
+                    </a>
+                    <a
+                      href={smsHref(b.phone, `Hi, I’m interested in the ${title} (stock no ${car.stockNo}).`)}
+                      className="sda-press flex h-12 items-center justify-center gap-2 rounded-full text-sm font-semibold text-white ring-1 ring-current/25 hover:ring-current/60"
+                    >
+                      <MessageSquare className="size-4" aria-hidden />
+                      Text us about this car
+                    </a>
+                    <p className="text-muted-foreground text-xs">
+                      {car.status === 'sold'
+                        ? 'This car has sold. Call us and we’ll find you something similar.'
+                        : 'Call or text to book a test drive or inspection, ask a question or talk about a trade-in.'}
+                    </p>
+                  </>
+                ) : bookable ? (
                   <>
                     <Link
                       href={`/cars/${car.slug}/book`}
@@ -297,12 +283,19 @@ export default function CarPage() {
               <p className="truncate text-xs text-black/60">{carName(car)}</p>
               <p className="font-display sda-num text-xl font-extrabold">{formatPrice(car.priceCents)}</p>
             </div>
-            <Link
-              href={`/cars/${car.slug}/book`}
-              className="sda-press bg-brand-red flex h-12 items-center rounded-full px-5 text-sm font-semibold text-white"
-            >
-              Book test drive
-            </Link>
+            {FORMS_OFFLINE ? (
+              <a href={telHref(b.phone)} className="sda-press bg-brand-red flex h-12 items-center gap-2 rounded-full px-5 text-sm font-semibold text-white">
+                <Phone className="size-4" aria-hidden />
+                Call us
+              </a>
+            ) : (
+              <Link
+                href={`/cars/${car.slug}/book`}
+                className="sda-press bg-brand-red flex h-12 items-center rounded-full px-5 text-sm font-semibold text-white"
+              >
+                Book test drive
+              </Link>
+            )}
           </div>
         </div>
       ) : null}

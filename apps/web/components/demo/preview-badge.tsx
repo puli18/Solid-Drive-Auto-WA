@@ -1,8 +1,8 @@
-/** Small fixed "Preview" badge shown on every page in demo mode (rendered by the root layout). */
-import { DEMO_MODE } from '@/lib/data/mode';
+/** Small fixed "Preview" badge shown on every page in demo mode (rendered by the root layout), except on the real domain. */
+import { DEMO_MODE, ON_SITE_DOMAIN } from '@/lib/data/mode';
 
 export function PreviewBadge() {
-  if (!DEMO_MODE) return null;
+  if (!DEMO_MODE || ON_SITE_DOMAIN) return null;
   return (
     <div
       role="status"

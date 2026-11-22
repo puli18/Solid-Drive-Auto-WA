@@ -3,10 +3,11 @@ import { useForm } from 'react-hook-form';
 import { Camera, CheckCircle2, ImagePlus, X } from 'lucide-react';
 import { type CallableInput, createEnquiryInput, MAX_TRADE_IN_PHOTOS, TRADE_IN_CONDITIONS } from '@sda/shared';
 import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { DEMO_MODE, DemoUnsupportedError, runAction } from '@/lib/data';
+import { DEMO_MODE, FORMS_OFFLINE, DemoUnsupportedError, runAction } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import { applyActionError, DemoNote, FormAlert, sharedResolver, SubmitButton, TextField } from './form-kit';
 import { Turnstile, type TurnstileHandle } from './turnstile';
+import { CallUs } from './call-us';
 
 type Values = CallableInput<'createEnquiry'>;
 type Photo = { id: string; file: File; url: string };
@@ -25,6 +26,10 @@ const MAX_BYTES = 15 * 1024 * 1024;
  * throws DemoUnsupportedError – we keep the local previews, skip the upload, and still send the enquiry.
  */
 export function TradeInForm() {
+  return FORMS_OFFLINE ? <CallUs topic="tradeIn" /> : <TradeInFormFields />;
+}
+
+function TradeInFormFields() {
   const ts = useRef<TurnstileHandle>(null);
   const fileInput = useRef<HTMLInputElement>(null);
   const [photos, setPhotos] = useState<Photo[]>([]);

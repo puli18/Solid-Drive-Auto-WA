@@ -1,2 +1,9 @@
-# Cloudflare Pages: single-page app – every unknown path serves index.html (static files win first).
-/* /index.html 200
+# Cloudflare Pages. Rewrites here are applied before static files, so there is deliberately no `/* …` rule:
+# the pre-rendered pages (scripts/prerender.ts, e.g. dist/cars/<slug>.html at /cars/<slug>) must win, and any
+# other unknown path gets Pages' built-in SPA fallback (dist/index.html). App-only routes get the plain shell.
+/admin /spa/ 200
+/admin/* /spa/ 200
+/booking/* /spa/ 200
+/reserve/* /spa/ 200
+/cars/:slug/book /spa/ 200
+/cars/:slug/reserve /spa/ 200

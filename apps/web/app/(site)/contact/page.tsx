@@ -6,9 +6,9 @@ import { getPublicSettings } from '@/lib/data/public';
 import { EnquiryForm } from '@/components/site/forms/enquiry-form';
 import { addressLines, hoursRows, mapsEmbedUrl, mapsUrl, telHref } from '@/components/site/lib/format';
 import { Container, PageHero } from '@/components/site/primitives';
-import { WEEKDAYS } from '@sda/shared';
-
-const SCHEMA_DAY = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' } as const;
+import { dealerJsonLd, isRealAbn, isRealEmail } from '@/components/site/lib/seo';
+import { publicEnv } from '@/lib/env';
+import { FORMS_OFFLINE } from '@/lib/data/mode';
 
 export const metadata: Metadata = {
   title: 'Contact & directions',
@@ -23,31 +23,7 @@ export async function loader() {
 export default function ContactPage() {
   const s = useLoaderData() as LoaderData<typeof loader>;
   const b = s.business;
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'AutoDealer',
-    name: b.name,
-    telephone: b.phone,
-    email: b.email,
-    // Structured hours from the booking rules (weekly open ranges); the display text is b.hours.
-    openingHoursSpecification: WEEKDAYS.flatMap((d) =>
-      (s.booking.weeklyHours[d] ?? []).map((r) => ({
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: `https://schema.org/${SCHEMA_DAY[d]}`,
-        opens: r.start,
-        closes: r.end,
-      })),
-    ),
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: [b.address.line1, b.address.line2].filter(Boolean).join(', '),
-      addressLocality: b.address.suburb,
-      addressRegion: b.address.state,
-      postalCode: b.address.postcode,
-      addressCountry: 'AU',
-    },
-  };
-  useJsonLd(jsonLd);
+  useJsonLd(dealerJsonLd(b, s.booking.weeklyHours, publicEnv.siteUrl));
 
   return (
     <>
@@ -83,11 +59,13 @@ export default function ContactPage() {
                   {b.phone}
                 </a>
               </Info>
-              <Info icon={<Mail />} label="Email">
-                <a href={`mailto:${b.email}`} className="break-all underline-offset-4 hover:underline">
-                  {b.email}
-                </a>
-              </Info>
+              {isRealEmail(b.email) ? (
+                <Info icon={<Mail />} label="Email">
+                  <a href={`mailto:${b.email}`} className="break-all underline-offset-4 hover:underline">
+                    {b.email}
+                  </a>
+                </Info>
+              ) : null}
             </ul>
             <div className="bg-brand-stone aspect-[4/3] overflow-hidden rounded-2xl">
               <iframe
@@ -99,15 +77,19 @@ export default function ContactPage() {
               />
             </div>
             <p className="text-muted-foreground font-mono text-xs">
-              {b.name} · ABN {b.abn} · {b.dealerLicenceNo}
+              {b.name}{isRealAbn(b.abn) ? ` · ABN ${b.abn}` : ''} · Dealer licence {b.dealerLicenceNo}
             </p>
           </div>
 
           <div>
-            <h2 className="font-display text-2xl font-extrabold sm:text-3xl" style={{ fontStretch: '108%' }}>
-              Send us a message
-            </h2>
-            <p className="text-muted-foreground mt-2 mb-6">We’ll get back to you as soon as we can.</p>
+            {FORMS_OFFLINE ? null : (
+              <>
+                <h2 className="font-display text-2xl font-extrabold sm:text-3xl" style={{ fontStretch: '108%' }}>
+                  Send us a message
+                </h2>
+                <p className="text-muted-foreground mt-2 mb-6">We’ll get back to you as soon as we can.</p>
+              </>
+            )}
             <EnquiryForm />
           </div>
         </Container>

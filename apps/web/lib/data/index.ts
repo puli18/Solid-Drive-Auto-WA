@@ -10,7 +10,7 @@ import { demoAdminRepo } from './demo/admin';
 import { DEMO_MODE } from './mode';
 import type { AdminRepository } from './types';
 
-export { DATA_MODE, DEMO_MODE, type DataMode } from './mode';
+export { DATA_MODE, DEMO_MODE, FORMS_OFFLINE, INDEXABLE, type DataMode } from './mode';
 export * from './types';
 export {
   actionErrorMessage,

@@ -52,6 +52,11 @@ export function telHref(phone: string): string {
   return `tel:${phone.replace(/[^\d+]/g, '')}`;
 }
 
+/** SMS link with an optional pre-filled message (`?&body=` works on both iOS and Android). */
+export function smsHref(phone: string, body?: string): string {
+  return `sms:${phone.replace(/[^\d+]/g, '')}${body ? `?&body=${encodeURIComponent(body)}` : ''}`;
+}
+
 export function mapsUrl(b: Pick<BusinessSettings, 'address' | 'name'>): string {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${b.name}, ${addressOneLine(b)}`)}`;
 }

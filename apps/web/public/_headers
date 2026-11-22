@@ -4,6 +4,12 @@
 /admin/*
   X-Robots-Tag: noindex, nofollow
 
+# The pages.dev hosts (production alias and branch/commit previews) duplicate soliddriveauto.com.au: keep them out of search.
+https://solid-drive-auto-wa.pages.dev/*
+  X-Robots-Tag: noindex
+https://:sub.solid-drive-auto-wa.pages.dev/*
+  X-Robots-Tag: noindex
+
 # Vite's hashed build assets never change.
 /assets/*
   Cache-Control: public, max-age=31536000, immutable

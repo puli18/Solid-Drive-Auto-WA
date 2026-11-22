@@ -1,5 +1,5 @@
 import Link from '@/components/link';
-import { useRef, useState } from 'react';
+import { type ComponentProps, useRef, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { CalendarPlus, CheckCircle2, Search, Wrench } from 'lucide-react';
 import {
@@ -12,12 +12,13 @@ import {
 } from '@sda/shared';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { DEMO_MODE, runAction } from '@/lib/data';
+import { DEMO_MODE, FORMS_OFFLINE, runAction } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import { applyActionError, DemoNote, FormAlert, sharedResolver, SubmitButton, TextField } from '../forms/form-kit';
 import { Turnstile, type TurnstileHandle } from '../forms/turnstile';
 import { downloadIcs } from '../lib/ics';
 import { SlotPicker } from './slot-picker';
+import { CallUs } from '../forms/call-us';
 
 type Values = CallableInput<'createBooking'>;
 
@@ -26,7 +27,11 @@ const TYPES = [
   { value: 'inspection', icon: Wrench, title: 'Inspection', text: 'Look it over at the yard, bring a mechanic, ask all the questions.' },
 ] as const;
 
-export function BookingFlow({
+export function BookingFlow(props: ComponentProps<typeof BookingFlowSteps>) {
+  return FORMS_OFFLINE ? <CallUs topic="booking" carTitle={props.car.title} /> : <BookingFlowSteps {...props} />;
+}
+
+function BookingFlowSteps({
   car,
   settings,
   timezone,

@@ -12,8 +12,19 @@ import { LatestCars } from '@/components/site/home/latest-cars';
 import { FinanceCalculator } from '@/components/site/finance-calculator';
 import { EnquiryForm } from '@/components/site/forms/enquiry-form';
 import { carName, formatPrice, formatYear, hasPrice, hoursRows, mapsUrl, TBC, telHref, transmissionLabel } from '@/components/site/lib/format';
+import { dealerJsonLd, isRealEmail } from '@/components/site/lib/seo';
+import { type Metadata, SITE_META, useJsonLd } from '@/lib/meta';
+import { publicEnv } from '@/lib/env';
 import { CATEGORIES, filterOptions } from '@/components/site/lib/inventory';
 import { Container, Headline, Kicker, LogoMark } from '@/components/site/primitives';
+
+export const metadata: Metadata = {
+  title: { absolute: SITE_META.title },
+  description:
+    'Solid Drive Auto WA is a licensed used car dealer in Bellevue, Perth. Quality used cars, utes and 4x4s, every one photographed and priced online. Call 0451 847 563.',
+  alternates: { canonical: '/' },
+  openGraph: { type: 'website', url: '/', images: [{ url: '/images/og/default.webp', alt: 'Solid Drive Auto WA' }] },
+};
 
 const PRICE_STEPS = [5_000, 7_500, 10_000, 15_000, 20_000, 25_000, 30_000, 40_000, 50_000, 60_000, 80_000, 100_000];
 
@@ -24,6 +35,7 @@ export async function loader() {
 export default function HomePage() {
   const [cars, settings] = useLoaderData() as LoaderData<typeof loader>;
   const b = settings.business;
+  useJsonLd(dealerJsonLd(b, settings.booking.weeklyHours, publicEnv.siteUrl));
   const available = cars.filter((c) => c.status === 'available');
   const opts = filterOptions(cars);
   const priceSteps = PRICE_STEPS.filter((p, i) => p <= opts.maxPrice || PRICE_STEPS[i - 1]! < opts.maxPrice);
@@ -196,9 +208,15 @@ export default function HomePage() {
               </p>
               <div>
                 <p className="text-base font-semibold">Cars on the yard right now</p>
-                <a href={`mailto:${b.email}`} className="mt-3 inline-block text-sm text-white/85 underline-offset-4 hover:underline">
-                  {b.email}
-                </a>
+                {isRealEmail(b.email) ? (
+                  <a href={`mailto:${b.email}`} className="mt-3 inline-block text-sm text-white/85 underline-offset-4 hover:underline">
+                    {b.email}
+                  </a>
+                ) : (
+                  <a href={telHref(b.phone)} className="sda-num mt-3 inline-block text-sm text-white/85 underline-offset-4 hover:underline">
+                    Call {b.phone}
+                  </a>
+                )}
               </div>
             </div>
           </div>

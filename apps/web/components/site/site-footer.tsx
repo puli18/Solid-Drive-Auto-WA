@@ -1,6 +1,7 @@
 import Link from '@/components/link';
 import type { PublicSettings } from '@/lib/data/public';
 import { addressLines, hoursRows, mapsUrl, telHref } from './lib/format';
+import { isRealAbn, isRealEmail } from './lib/seo';
 import { Container, LogoFull } from './primitives';
 
 const COLUMNS = [
@@ -69,9 +70,11 @@ export function SiteFooter({ settings }: { settings: PublicSettings }) {
               <a href={telHref(b.phone)} className="sda-num block text-lg font-semibold text-white">
                 {b.phone}
               </a>
-              <a href={`mailto:${b.email}`} className="text-muted-foreground hover:text-foreground">
-                {b.email}
-              </a>
+              {isRealEmail(b.email) ? (
+                <a href={`mailto:${b.email}`} className="text-muted-foreground hover:text-foreground">
+                  {b.email}
+                </a>
+              ) : null}
             </div>
           </div>
 
@@ -103,7 +106,13 @@ export function SiteFooter({ settings }: { settings: PublicSettings }) {
 
         <div className="text-muted-foreground mt-14 flex flex-col gap-3 border-t border-white/10 py-8 text-xs sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {new Date().getFullYear()} {b.name}. ABN <span className="sda-num">{b.abn}</span>
+            © {new Date().getFullYear()} {b.name}.
+            {isRealAbn(b.abn) ? (
+              <>
+                {' '}
+                ABN <span className="sda-num">{b.abn}</span>
+              </>
+            ) : null}
           </p>
           <p>
             Licensed motor vehicle dealer · <span className="sda-num font-mono">{b.dealerLicenceNo}</span>

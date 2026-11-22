@@ -4,7 +4,7 @@
  * the section's defaults/title template via `useDocumentMeta`.
  */
 import { useEffect } from 'react';
-import { DEMO_MODE } from './data/mode';
+import { INDEXABLE } from './data/mode';
 import { publicEnv } from './env';
 
 export interface Metadata {
@@ -69,7 +69,7 @@ export function applyDocumentMeta(meta: Metadata | undefined, defaults: MetaDefa
   const descEl = head.querySelector<HTMLMetaElement>('meta[name="description"]');
   if (descEl) descEl.content = description ?? '';
 
-  const robots = DEMO_MODE ? { index: false, follow: false } : (m.robots ?? defaults.robots);
+  const robots = !INDEXABLE ? { index: false, follow: false } : (m.robots ?? defaults.robots);
   if (robots && !head.querySelector(`meta[name="robots"]:not([${ATTR}])`)) setTag(head, 'meta', { name: 'robots', content: robotsContent(robots) });
   if (m.referrer) setTag(head, 'meta', { name: 'referrer', content: m.referrer });
   if (m.alternates?.canonical) setTag(head, 'link', { rel: 'canonical', href: abs(m.alternates.canonical) });
