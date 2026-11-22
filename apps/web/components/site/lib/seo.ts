@@ -62,6 +62,7 @@ export function dealerJsonLd(b: Business, weeklyHours: WeeklyHours, siteUrl: str
     image: `${siteUrl}/images/og/default.webp`,
     telephone: b.phone,
     email: isRealEmail(b.email) ? b.email : undefined,
+    taxID: isRealAbn(b.abn) ? `ABN ${b.abn}` : undefined,
     priceRange: '$$',
     areaServed: { '@type': 'City', name: 'Perth' },
     // Structured hours from the booking rules (weekly open ranges); the display text is b.hours.

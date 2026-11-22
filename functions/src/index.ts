@@ -1,5 +1,5 @@
 /**
- * Cloud Functions entry point (2nd gen, region australia-southeast1, Node 20).
+ * Cloud Functions entry point (2nd gen, Node 22; region australia-southeast1, Firestore triggers in FIRESTORE_REGION).
  * Every exported const here is deployed. Add new functions by exporting them below.
  */
 // Bookings

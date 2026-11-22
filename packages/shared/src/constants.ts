@@ -275,7 +275,7 @@ export const DEFAULT_BOOKING_SETTINGS = {
 export const DEFAULT_BUSINESS_SETTINGS = {
   name: 'Solid Drive Auto WA',
   shortName: 'SDA WA',
-  abn: '00 000 000 000',
+  abn: '19 673 693 375',
   dealerLicenceNo: 'MD33297',
   address: {
     line1: '1/14 Wells Street',

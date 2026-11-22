@@ -38,3 +38,13 @@ All foundation (M1) deliverables plus the demo-mode data layer are in place. Not
 ## Left / not verified
 - `pnpm typecheck` for web fails: the stray `apps/web/node_modules.broken-*` / `.hollow-*` backup directories are picked up by tsc, and there are 17 errors in admin/site code (nullable `next/navigation` params, a Firestore type). None involve `@sda/shared` or functions; they belong to other owners, and the backup directories need deleting by whoever created them. Scripts typecheck passes.
 - Not verified (no keys): real Stripe Checkout / webhook from Stripe, Resend sending, Cloudflare Images upload/delete, cache purge, Turnstile with a real secret, V4 signed export URLs in production.
+
+# Functions deployed (2026-11-22)
+
+Live on `solid-drive-auto-wa`, 2nd gen, Node 22 (deploy: `FUNCTIONS_DISCOVERY_TIMEOUT=120 npx firebase deploy --only functions --project solid-drive-auto-wa`).
+- `australia-southeast1` (21): callables getAvailability, createBooking, cancelBooking, rescheduleBooking, getManagedBooking, staffCreateBooking, createEnquiry, getTradeInUploadUrls, createDepositCheckout, getDepositStatus, getImageUploadUrl, deleteCarImage, exportCarReport, exportStockReport, setUserRole, inviteUser, deactivateUser; HTTP stockFeed, stripeWebhook; scheduled sendBookingReminders, cleanupExports (hourly).
+- `australia-southeast2` (2, the Firestore database's location): onCarWrite, onBookingStatusChange.
+- Secrets in Secret Manager: STOCK_FEED_KEY has a real random value; TURNSTILE_SECRET_KEY, STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, RESEND_API_KEY, CF_IMAGES_API_TOKEN, CF_CACHE_PURGE_TOKEN are `unset`. Env (`functions/.env.solid-drive-auto-wa`): SITE_URL=https://soliddriveauto.com.au, ENFORCE_APP_CHECK=false. Artifact Registry cleanup policy: 1 day in both regions.
+- Checked: stockFeed without key → 401; stripeWebhook → 503 "Webhook not configured"; getAvailability with empty input → 400 INVALID_ARGUMENT; no startup errors in logs.
+- Not working until keys arrive: Stripe deposits (deposits are created `pending` without charging; webhook 503), emails (logged only), Turnstile (test secret, always passes), Cloudflare Images uploads (`failed-precondition`) and cache purge (logged).
+- Not set up yet: default Storage bucket (exports, receipt/trade-in storage paths and cleanupExports need it); exports' signed URLs also need *Service Account Token Creator* on the runtime service account; no Auth users / admin account yet. The web app on the domain still runs the demo build, so nothing calls these functions yet.

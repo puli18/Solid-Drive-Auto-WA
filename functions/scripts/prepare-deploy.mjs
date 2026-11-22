@@ -15,7 +15,7 @@ const out = {
   dependencies: pkg.dependencies,
 };
 writeFileSync(join(root, 'lib', 'package.json'), JSON.stringify(out, null, 2) + '\n');
-for (const f of ['.env', '.env.local', '.env.demo-solid-drive', '.env.dealership-staging', '.env.dealership-prod', '.secret.local']) {
+for (const f of ['.env', '.env.local', '.env.demo-solid-drive', '.env.dealership-staging', '.env.dealership-prod', '.env.solid-drive-auto-wa', '.secret.local']) {
   if (existsSync(join(root, f))) copyFileSync(join(root, f), join(root, 'lib', f));
 }
 // The emulator/deploy CLI looks for `<source>/node_modules/.bin/firebase-functions`; point lib/node_modules

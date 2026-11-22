@@ -1,6 +1,6 @@
 import { onDocumentUpdated } from 'firebase-functions/v2/firestore';
 import { logger } from 'firebase-functions/v2';
-import { REGION } from '../core';
+import { FIRESTORE_REGION } from '../core';
 import { releaseBookingSlot } from './logic';
 
 /**
@@ -10,7 +10,7 @@ import { releaseBookingSlot } from './logic';
  * own transaction, so the trigger is then a no-op).
  */
 export const onBookingStatusChange = onDocumentUpdated(
-  { region: REGION, document: 'bookings/{bookingId}' },
+  { region: FIRESTORE_REGION, document: 'bookings/{bookingId}' },
   async (event) => {
     const before = event.data?.before.data();
     const after = event.data?.after.data();

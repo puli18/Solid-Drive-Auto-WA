@@ -10,7 +10,7 @@ Public website (browse stock, book test drives/inspections, pay a non-refundable
 | Path | What |
 | --- | --- |
 | `apps/web` | Vite + React 19 SPA (React Router 7, TS, Tailwind v4, shadcn/ui) – public site `app/(site)` + admin `app/admin` (routes in `app/routes.tsx`), static deploy to Cloudflare Pages |
-| `functions` | Firebase Cloud Functions (2nd gen, Node 20, region `australia-southeast1`) |
+| `functions` | Firebase Cloud Functions (2nd gen, Node 22, region `australia-southeast1`; Firestore triggers in `australia-southeast2`) |
 | `packages/shared` | `@sda/shared` – zod schemas, types, constants, money/GST, slug, status rules, finance calc, Perth time + slot helpers |
 | `tests/rules` | Firestore + Storage security rules tests (`@firebase/rules-unit-testing`) |
 | `scripts` | `seed.ts` (+ `seed.config.ts`, emulators), `seed-stock.ts` (stock + settings to a real project), `data/stock.ts` (the dealer's cars – scripts only), `with-java.sh` |
@@ -18,7 +18,7 @@ Public website (browse stock, book test drives/inspections, pay a non-refundable
 
 ## Prerequisites
 
-- Node 20+ (`.nvmrc` = 20; Node 22 works locally) and pnpm 11 (`corepack enable`)
+- Node 22 (`.nvmrc` = 22, matching the functions runtime) and pnpm 11 (`corepack enable`)
 - **Java 11+** for the Firestore/Storage emulators – `brew install openjdk@21`. `scripts/with-java.sh` finds it automatically even if the system Java is older.
 - No Firebase login is needed for local dev: the emulators run the `demo-solid-drive` demo project.
 

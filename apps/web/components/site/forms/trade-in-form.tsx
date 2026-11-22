@@ -23,7 +23,8 @@ const MAX_BYTES = 15 * 1024 * 1024;
 /**
  * Trade-in valuation request: vehicle details + up to 6 photos.
  * Photos go to Cloudflare Images via `getTradeInUploadUrls` (direct creator upload). In demo mode that call
- * throws DemoUnsupportedError – we keep the local previews, skip the upload, and still send the enquiry.
+ * throws DemoUnsupportedError – we keep the local previews, skip the upload, and still send the enquiry. On the
+ * live site a failed photo upload (e.g. Cloudflare Images not configured yet) also skips the photos and sends.
  */
 export function TradeInForm() {
   return FORMS_OFFLINE ? <CallUs topic="tradeIn" /> : <TradeInFormFields />;
@@ -93,7 +94,10 @@ function TradeInFormFields() {
       return { ids, skipped: false };
     } catch (e) {
       if (e instanceof DemoUnsupportedError) return { ids: [], skipped: true };
-      throw e;
+      // Live site: if photo uploads aren't available (Cloudflare Images not configured yet, or an upload
+      // failed), still send the request without photos rather than losing the enquiry.
+      console.warn('Trade-in photo upload failed; sending without photos', e);
+      return { ids: [], skipped: true };
     }
   }
 
@@ -128,8 +132,12 @@ function TradeInFormFields() {
           Thanks – our buyer will look over the details{done.uploaded ? ` and ${done.uploaded} photo${done.uploaded === 1 ? '' : 's'}` : ''} and get back
           to you. A copy is on its way to <span className="text-foreground font-medium">{done.email}</span>.
         </p>
-        {done.skippedPhotos ? (
+        {done.skippedPhotos && DEMO_MODE ? (
           <DemoNote className="mt-5">Preview mode – photos aren’t uploaded and nothing was sent. On the live site they go with your request.</DemoNote>
+        ) : done.skippedPhotos ? (
+          <p className="text-muted-foreground mt-4 max-w-lg text-sm">
+            Your photos couldn’t be uploaded this time, but your details were sent. We may ask you to text a few photos.
+          </p>
         ) : DEMO_MODE ? (
           <DemoNote className="mt-5">Preview mode – nothing was sent.</DemoNote>
         ) : null}

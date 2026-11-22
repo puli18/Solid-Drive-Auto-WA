@@ -2,7 +2,7 @@
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json",
-    "location": "australia-southeast1"
+    "location": "australia-southeast2"
   },
   "storage": {
     "rules": "storage.rules"
@@ -11,7 +11,7 @@
     {
       "source": "functions/lib",
       "codebase": "default",
-      "runtime": "nodejs20",
+      "runtime": "nodejs22",
       "ignore": [
         "node_modules",
         "*.map",

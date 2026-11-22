@@ -1,7 +1,7 @@
 import { carSlug, COLLECTIONS, SYSTEM_ACTOR, type AuditAction } from '@sda/shared';
 import { logger } from 'firebase-functions/v2';
 import { onDocumentWritten } from 'firebase-functions/v2/firestore';
-import { bindSecrets, db, diffFields, REGION, siteUrl, writeAudit } from '../core';
+import { bindSecrets, db, diffFields, FIRESTORE_REGION, siteUrl, writeAudit } from '../core';
 import { purgeCache } from '../core/cloudflare';
 
 /** Fields this trigger itself maintains (a change to only these is not audited / purged again). */
@@ -40,7 +40,7 @@ export function purgeUrlsFor(before: Record<string, unknown> | undefined, after:
  * Loop guard: it only writes when slug/searchText actually changed, and ignores changes to derived fields only.
  */
 export const onCarWrite = onDocumentWritten(
-  { region: REGION, document: 'cars/{carId}', secrets: bindSecrets('CF_CACHE_PURGE_TOKEN') },
+  { region: FIRESTORE_REGION, document: 'cars/{carId}', secrets: bindSecrets('CF_CACHE_PURGE_TOKEN') },
   async (event) => {
     const carId = event.params.carId;
     const before = event.data?.before.exists ? (event.data.before.data() as Record<string, unknown>) : undefined;

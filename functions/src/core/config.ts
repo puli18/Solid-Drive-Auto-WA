@@ -10,6 +10,13 @@ import { REGION } from '@sda/shared';
 
 export { REGION };
 
+/**
+ * Firestore-triggered functions must run in the database's location. The live database
+ * (solid-drive-auto-wa) is in australia-southeast2 (Melbourne), while callables/HTTP/scheduled
+ * functions stay in REGION (australia-southeast1, Sydney) where the web app calls them.
+ */
+export const FIRESTORE_REGION = 'australia-southeast2' as const;
+
 export const SECRET_NAMES = [
   'TURNSTILE_SECRET_KEY',
   'STRIPE_SECRET_KEY',

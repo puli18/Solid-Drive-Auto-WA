@@ -12,7 +12,7 @@ Every agent working on this repo reads this file and `Dealership Platform – Bu
 
 ## Stack (as in the plan; do not change without asking the orchestrator)
 
-pnpm monorepo: `apps/web` (Vite + React 19 SPA with React Router 7, TS, Tailwind v4, shadcn/ui; static deploy to Cloudflare Pages – see DECISIONS "Web: Next.js → Vite"), `functions/` (Firebase Functions v2, Node 20, TS), `packages/shared` (zod schemas, types, constants).
+pnpm monorepo: `apps/web` (Vite + React 19 SPA with React Router 7, TS, Tailwind v4, shadcn/ui; static deploy to Cloudflare Pages – see DECISIONS "Web: Next.js → Vite"), `functions/` (Firebase Functions v2, Node 22, TS), `packages/shared` (zod schemas, types, constants).
 Local dev uses the Firebase Emulator Suite with project id `demo-solid-drive` (the `demo-` prefix means no real Firebase project is needed). Real Stripe/Resend/Cloudflare/Turnstile keys are not available yet: code against env vars from `.env.example`, use Turnstile's always-pass test keys, and make functions degrade gracefully (log the email instead of sending) when a key is missing.
 
 ## Ownership (to avoid agents overwriting each other)
@@ -29,7 +29,7 @@ If you need something in an area you don't own: add a NEW file next to it rather
 
 ## Client preview deploy (demo mode) – required
 
-The owner deploys to Cloudflare Pages (`pnpm --filter web deploy:preview`, https://solid-drive-auto-wa.pages.dev) to show the client a preview before Cloud Functions, Auth, Stripe, Resend or Cloudflare Images are live.
+Demo mode was used for the client preview before the backend was live. Since the go-live switch (see "Live domain") the Pages project builds the real site; demo mode stays available locally (`pnpm dev:demo`) and for a manual preview (`pnpm --filter web build:preview` / `deploy:preview`, which deploys to the same Pages project, so only use it on a branch deployment).
 
 - **Cars live in Firestore, never in the app bundle.** The dealer's stock is seed data in `scripts/data/stock.ts` (imported ONLY by scripts), written by `pnpm seed:stock` (real project, dry run by default) and by `pnpm seed` (emulators). Do not add car data to `@sda/shared` or `apps/web`.
 - `VITE_DEMO_MODE=true` switches the web app to a bundled demo data source for everything except cars: demo users and settings from ONE shared fixture module (`packages/shared/src/demo/`, also used by `scripts/seed.ts`); bookings, enquiries, expenses, vendors, sales, deposits and car financials start empty.
@@ -39,12 +39,15 @@ The owner deploys to Cloudflare Pages (`pnpm --filter web deploy:preview`, https
 - Admin in demo mode: login accepts the demo admin and staff accounts (shown on the login screen), the role switch works, and edits persist only in the viewer's browser (localStorage overlay on the fixtures and live cars) with a visible "Demo mode – changes are only saved in this browser" banner and a reset button. Excel exports may be generated client-side with exceljs in demo mode.
 - A small "Preview" badge is visible on both sites in demo mode, except on the real domain. Demo mode must never be on in a `pnpm build` (production) build.
 
-## Live domain (soliddriveauto.com.au) – SEO
+## Live domain (soliddriveauto.com.au) – real backend, SEO
 
-Until Cloud Functions are live, the public domain is served by the same demo-mode build as the preview (Cloudflare Pages project `solid-drive-auto-wa`, Git-connected: every push to `main` deploys with `pnpm --filter web build:preview`; it is served on both the domain and `solid-drive-auto-wa.pages.dev`).
+The live site runs on the real Firebase backend (no demo mode). Cloudflare Pages project `solid-drive-auto-wa` is Git-connected: every push to `main` builds `pnpm --filter web build` (production: `apps/web/.env.production`, `SDA_DEPLOY_ENV=production`, demo mode refused) and serves it on soliddriveauto.com.au, www. and `solid-drive-auto-wa.pages.dev`. Demo mode is local only now (`pnpm dev:demo`, `pnpm --filter web build:preview` / `deploy:preview` for a manual client preview).
 
-- `VITE_SITE_URL=https://soliddriveauto.com.au` (canonical tags, sitemap, schema.org) and `VITE_ALLOW_INDEXING=true` (`INDEXABLE` in `lib/data/mode.ts`) in `.env.preview`. The pages.dev hosts are kept out of Google by host rules in `public/_headers`.
-- `FORMS_OFFLINE` (demo mode AND served from the `VITE_SITE_URL` host): the enquiry, trade-in, booking and reserve forms render `components/site/forms/call-us.tsx` (call / text) and the car page CTAs become call/text links, because nothing would be delivered. pages.dev keeps the working demo forms. Any new form must do the same.
+- `apps/web/.env.production` sets EVERY `VITE_*` key (so a local `.env.local` pointing at the emulators can't leak into a production build): project `solid-drive-auto-wa`, emulators off, no App Check key (functions run with `ENFORCE_APP_CHECK=false`), Turnstile always-pass TEST site key (the functions' `TURNSTILE_SECRET_KEY` is `unset`, which accepts any token; switch the site key first or together with the real secret), `VITE_SITE_URL=https://soliddriveauto.com.au`.
+- Online deposits are off (`settings/deposit.enabled=false`) until Stripe is set up: car pages show no Reserve button and `/cars/:slug/reserve` says deposits are switched off. Re-enable in Admin → Settings once Stripe keys are live.
+- Enquiries, trade-ins and bookings are written to Firestore by the callables and show in the admin; customer/dealer emails are only logged until `RESEND_API_KEY` is set. Trade-in photos need Cloudflare Images: without it the trade-in form sends the request without photos. Admin car photo uploads show "Photo uploads are not configured yet" per photo.
+- Admin sign-in: Firebase Auth email/password. First admin created with `pnpm create-admin` (no password); the owner sets one with "Forgot password?" on `/admin/login` (Firebase's own reset email). TOTP 2FA is not enforced yet (the MFA resolver isn't wired).
+- Canonical host is `VITE_SITE_URL`; the pages.dev hosts are kept out of Google by host rules in `public/_headers`. `FORMS_OFFLINE` (call/text panel instead of the forms) only applies to a demo-mode build served from the `VITE_SITE_URL` host, so it is off on the live site. Any new form must still handle it.
 - Placeholder contact details (`.test` email, all-zero ABN) are never shown publicly (`isRealEmail` / `isRealAbn`, `components/site/lib/seo.ts`).
 - `scripts/prerender.ts` (run after `vite build`) writes `dist/<route>.html` for every public page and published car (head tags + JSON-LD + a plain-HTML content snapshot inside `#root`), `dist/spa/index.html`, `sitemap.xml` and `robots.txt`. Titles/descriptions come from the route modules' `metadata` / `meta()`; JSON-LD from `components/site/lib/seo.ts`, shared with the pages. New public pages go in its `PAGES` list. Cars added after a build still work (SPA fallback) and are pre-rendered on the next deploy.
 - `public/_redirects` has NO catch-all rewrite: Pages applies rewrites before static files, so `/* … 200` would hide the pre-rendered pages.

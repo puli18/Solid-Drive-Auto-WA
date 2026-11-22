@@ -2,10 +2,10 @@
   "name": "functions",
   "version": "0.1.0",
   "private": true,
-  "description": "Firebase Cloud Functions (2nd gen, Node 20) for Solid Drive Auto WA",
+  "description": "Firebase Cloud Functions (2nd gen, Node 22) for Solid Drive Auto WA",
   "main": "index.js",
   "engines": {
-    "node": "20"
+    "node": "22"
   },
   "scripts": {
     "build": "node scripts/clean-lib.mjs && tsup && node scripts/prepare-deploy.mjs",
