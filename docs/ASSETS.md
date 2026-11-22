@@ -29,21 +29,23 @@ The AI-generated sample stock photos (`cars/car-01.webp` ... `car-12.webp`, `car
 
 ## Real stock photos (`cars/<car-key>/NN.webp`, 1168x880, 4:3)
 
-Real dealer photos (`assets/cars/1..3`) edited into the same studio style as the sample stock cars. One photo was kept per distinct angle (near-duplicates dropped). Each kept exterior photo was run once through GPT Image 2 (`gpt_image_2`, 4:3, 2k, quality high) as an image edit, with the source photo as the first reference image and, for exterior shots, a wide black number plate built from `brand/logo_with_full_name.png` (car mark left, wordmark right, thin silver border, 1400x420) as the second reference (interiors are composited instead, see below). Results were checked by eye against the source; rejected ones were regenerated (a mirrored side view, an invented window sticker, an angle that duplicated the cover).
+Real dealer photos (`assets/cars/1..4`) edited into the same studio style as the sample stock cars. One photo was kept per distinct angle (near-duplicates dropped). Each kept exterior photo was run once through GPT Image 2 (`gpt_image_2`, 4:3, 2k, quality high) as an image edit, with the source photo as the first reference image and, for exterior shots, a wide black number plate built from `brand/logo_with_full_name.png` (car mark left, wordmark right, thin silver border, 1400x420) as the second reference (interiors are composited instead, see below). Results were checked by eye against the source; rejected ones were regenerated (a mirrored side view, an invented window sticker, an angle that duplicated the cover; for the Navara: a front shot turned into a three-quarter view with changed wheels, invented Nissan badges on the tailgate and a garbled rear-window sticker).
 
 Exterior prompt (`{car}` = description of the exact car and its accessories):
 
 `Edit the first image, a real photo of a car for sale, into a professional used-car dealership stock photo. Keep the car EXACTLY as it is in the photo: {car}. Same paint colour, same wheels and tyres, same body shape, trim, lights, grille, badges and accessories, every detail unchanged; same camera angle and viewpoint, and the same orientation: do not mirror or flip the image, the car must face the same direction as in the photo. Do not redesign, restyle or alter the car in any way. Level the horizon so the car sits upright, and show the whole car fully in frame and centred. Replace the entire background and ground with a clean seamless light-grey studio background and floor, soft even studio lighting, gentle soft ground shadow under the car, photorealistic. Remove the outdoor reflections, the photographer's shadow and any people. Replace every number plate with the dealership plate shown in the second image (black plate with the Solid Drive Auto WA logo), fitted in correct perspective where the original plate was; no registration letters or numbers may remain anywhere. Remove the 'Galaxy S24+' and time watermark text. Add no other text or logos.`
 
-Interior shots (Mazda3 06-08, Patrol 08-10, Lancer 06-08) are NOT AI re-renders: they keep the original photo pixels and only the glass is replaced. Per shot (script and config kept outside the repo; method recorded in each `NN.json`):
+Navara (folder 4, WhatsApp images without the watermark): the watermark sentence is dropped, "any other cars" is added to the remove list, the `{car}` text names its accessories (5-spoke alloys, bonnet protector, weather shields, side steps, mud flaps, chrome sports bar with high stop light and two LED work lights, soft tonneau, plain black tailgate handle panel with no badge, 'NAVARA'/'ST' tailgate badges, chrome rear step bumper, the 'The Automotive Specialist 9417 9910' rear-window sticker), and the regenerated shots add one angle sentence (e.g. "This is a near head-on front view ..."). Exact prompts are in each `NN.json`.
+
+Interior shots (Mazda3 06-08, Patrol 08-10, Lancer 06-08, Navara 05-07) are NOT AI re-renders: they keep the original photo pixels and only the glass is replaced. Per shot (script and config kept outside the repo; method recorded in each `NN.json`):
 
 1. Glass mask: hand-traced polygons for each window (windscreen, side and rear-door windows, plus the door-mirror glass on Mazda 06/07), refined with OpenCV GrabCut, with forced-keep regions for everything in front of or on the glass (rear-view mirrors and mounts, A-pillars, door mirrors, wipers, bonnet scoop, headrests, steering-wheel rim, window division bar, the Mazda windscreen rego sticker and the Patrol "PATROL" windscreen banner, the latter masked by colour). Luminance or colour rules handle the wiper/dash lines and the blown-out windows (Mazda 08, Lancer 07). Each mask was checked as an overlay and in zoomed side-by-sides of the original.
 2. Fill: smooth neutral light-grey studio gradient in the tone of the exterior shots (soft horizon, slight edge falloff), a small per-window glass tint, a faint low-frequency reflection taken from the original glass, and light grain.
 3. Composite: original pixels outside the mask, 1-2 px feathered edge. The "Galaxy S24+" / time watermark is removed by an OpenCV inpaint limited to the text pixels (bottom-left corner, mostly outside the crop).
 4. Only global adjustments on the cabin: mild exposure/gamma (no sharpening, no local edits). Outside the mask the result matches the adjusted original pixel for pixel.
-5. Crop: full-width 4:3 (1496x1122) from the square source at a per-shot vertical offset (0-187 px), then `cwebp -q 80 -resize 1168 880`.
+5. Crop: full-width 4:3 (1496x1122) from the square source at a per-shot vertical offset (0-200 px), then `cwebp -q 80 -resize 1168 880`.
 
-Known leftovers kept from the original: the rear-view mirror reflections (the Patrol 08 mirror shows the photographer), door-mirror reflections on the Patrol 09 (with its stick-on blind-spot mirror), and blown-out highlights on cabin surfaces in Mazda 08 and Lancer 07. The small etched glass maker's mark on the Patrol 09 door glass falls inside the mask and is gone.
+Known leftovers kept from the original: the rear-view mirror reflections (the Patrol 08 mirror shows the photographer), door-mirror reflections on the Patrol 09 (with its stick-on blind-spot mirror), and blown-out highlights on cabin surfaces in Mazda 08 and Lancer 07. The small etched glass maker's mark on the Patrol 09 door glass falls inside the mask and is gone. Navara: the hanging air-freshener card and the door-mirror reflections are kept (05, 07), a thin scratch/thread line on the passenger door glass stays where it crosses the door mirror (07), and the two sports-bar work lights seen through the cab rear window (06) are outside the glass and were filled over. Navara exteriors: the high rear view (`21.27.10 (2)`) was dropped after three rejected tries (angle flattened into a duplicate of 03, then a different wheel design twice); `21.27.09 (1)` and `21.27.11` were dropped as duplicate angles. The AI exteriors redraw small paint marks (the front-guard scuff and rear-guard scratches are gone) and the 02 front view is rendered straight on, while the source is slightly angled towards the driver side.
 
 Originals and JSON (exact prompt per exterior shot, compositing method per interior shot): `assets/generated/stock/<car-key>/NN.png` + `NN.json`. Web files: `cwebp -q 80 -resize 1168 880`. Alt text: `cars/stock-photos.json`.
 
@@ -75,6 +77,13 @@ Originals and JSON (exact prompt per exterior shot, compositing method per inter
 | | 06 | dashboard | `f4bd2acf` |
 | | 07 | steering wheel and instrument cluster | `dc06bcc6` |
 | | 08 | cabin from rear seat | `c6046fb4` |
+| `nissan-navara-st` (folder 4) | 01 | front three-quarter (driver side, cover) | `WhatsApp Image 2026-11-05 at 21.27.09_` |
+| | 02 | front | `... 21.27.09` |
+| | 03 | rear three-quarter (passenger side) | `... 21.27.10 (1)` |
+| | 04 | rear three-quarter (driver side) | `... 21.27.10` |
+| | 05 | dashboard, steering wheel and front seats from the driver door | `... 21.27.11 (1)` |
+| | 06 | front seats from the passenger door | `... 21.27.11 (2)` |
+| | 07 | steering wheel, centre console and gear lever | `... 21.27.12` |
 
 ## Brand files (processed from the provided PNGs, not AI-generated)
 

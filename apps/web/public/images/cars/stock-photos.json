@@ -30,5 +30,14 @@
     { "file": "06.webp", "alt": "White 2007 Mitsubishi Lancer ES sedan, dashboard" },
     { "file": "07.webp", "alt": "White 2007 Mitsubishi Lancer ES sedan, steering wheel and instrument cluster" },
     { "file": "08.webp", "alt": "White 2007 Mitsubishi Lancer ES sedan, cabin from the rear seat" }
+  ],
+  "nissan-navara-st": [
+    { "file": "01.webp", "alt": "Silver Nissan Navara ST dual-cab ute with sports bar, front three-quarter view" },
+    { "file": "02.webp", "alt": "Silver Nissan Navara ST dual-cab ute with bonnet protector, front view" },
+    { "file": "03.webp", "alt": "Silver Nissan Navara ST dual-cab ute with sports bar and tonneau cover, rear three-quarter view" },
+    { "file": "04.webp", "alt": "Silver Nissan Navara ST dual-cab ute with sports bar and work lights, rear three-quarter view from the driver side" },
+    { "file": "05.webp", "alt": "Silver Nissan Navara ST dual-cab ute, dashboard, steering wheel and front seats" },
+    { "file": "06.webp", "alt": "Silver Nissan Navara ST dual-cab ute, front seats from the passenger door" },
+    { "file": "07.webp", "alt": "Silver Nissan Navara ST dual-cab ute, steering wheel and automatic gear lever" }
   ]
 }

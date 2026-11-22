@@ -19,15 +19,16 @@ const now = new Date('2026-11-03T02:00:00Z');
 describe('buildStockCarDocs', () => {
   const docs = buildStockCarDocs({ now });
 
-  it('builds the three stock cars with deterministic ids, slugs and seed audit fields', () => {
-    expect(docs.map((d) => d.id)).toEqual(['car-sda1001', 'car-sda1002', 'car-sda1003']);
-    expect(docs.map((d) => d.slug)).toEqual(['2012-mazda-mazda3-sda1001', 'nissan-patrol-dx-crd-4x4-sda1002', '2007-mitsubishi-lancer-es-sda1003']);
+  it('builds the stock cars with deterministic ids, slugs and seed audit fields', () => {
+    expect(docs.map((d) => d.id)).toEqual(['car-sda1001', 'car-sda1002', 'car-sda1003', 'car-sda1004']);
+    expect(docs.map((d) => d.slug)).toEqual(['2012-mazda-mazda3-sda1001', 'nissan-patrol-dx-crd-4x4-sda1002', '2007-mitsubishi-lancer-es-sda1003', 'nissan-navara-st-sda1004']);
     for (const d of docs) {
       expect(d).toMatchObject({ createdBy: SEED_STOCK_ACTOR, updatedBy: SEED_STOCK_ACTOR, deletedAt: null, published: true, status: 'available' });
       expect(d.createdAt).toBeInstanceOf(Date);
     }
-    // Newest first = Lancer (listed 1 day ago), then Patrol, then Mazda3.
+    // Newest first = Navara (listed today), then Lancer (1 day ago), Patrol, Mazda3.
     const t = (id: string) => (docs.find((d) => d.id === id)!.createdAt as Date).getTime();
+    expect(t('car-sda1004')).toBeGreaterThan(t('car-sda1003'));
     expect(t('car-sda1003')).toBeGreaterThan(t('car-sda1002'));
     expect(t('car-sda1002')).toBeGreaterThan(t('car-sda1001'));
   });
@@ -75,8 +76,8 @@ describe('buildStockCarDocs', () => {
 describe('buildStockSettingsDocs', () => {
   it('builds valid settings from the shared defaults with nextStockNo after the stock', () => {
     const s = buildStockSettingsDocs({ now });
-    expect(nextStockNoAfter()).toBe(1004);
-    expect(s.app.nextStockNo).toBe(1004);
+    expect(nextStockNoAfter()).toBe(1005);
+    expect(s.app.nextStockNo).toBe(1005);
     expect(s.business).toMatchObject({ dealerLicenceNo: 'MD33297', phone: '0451 847 563', updatedBy: SEED_STOCK_ACTOR });
     for (const id of ['business', 'booking', 'deposit', 'finance', 'legal', 'app'] as const) {
       expect(validateSettingsDoc(id, s[id]), id).toEqual([]);

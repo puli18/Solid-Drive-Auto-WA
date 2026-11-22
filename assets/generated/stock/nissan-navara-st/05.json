@@ -1,0 +1,23 @@
+{
+  "method": "composite (no AI re-rendering); original photo pixels kept everywhere except the masked glass area",
+  "source": "assets/cars/4/WhatsApp Image 2026-11-05 at 21.27.11 (1).jpeg",
+  "mask": "GrabCut (OpenCV) seeded by hand-traced polygons for the passenger door window and the windscreen; rear-view mirror and its stalk, the hanging air-freshener card (hard-protected), the passenger door mirror, A-pillar and headliner protected; the dark door-frame seal at the top of the side window kept by a luminance rule; two small forced-glass patches (sky above the door mirror, a roof edge seen through the top of the side window).",
+  "fill": "smooth neutral light-grey studio gradient (tones [202, 222, 228, 218, 212] at source y=[0, 250, 400, 700, 1496], horizon at source y=400), slight per-window glass tint, faint low-frequency reflection (6% of the original glass luminance variation), light grain",
+  "feather_px": 1.0,
+  "watermark": "none in this source (WhatsApp image without the Galaxy watermark)",
+  "global_adjustments": {
+    "exposure": 1.03,
+    "gamma": 1.12
+  },
+  "crop": {
+    "x": 0,
+    "y": 160,
+    "width": 1496,
+    "height": 1122
+  },
+  "check": "outside the dilated mask the result equals the globally adjusted original (max per-channel difference 1, rounding); mask checked as an overlay and in zoomed side-by-sides",
+  "outputs": {
+    "full_res": "assets/generated/stock/nissan-navara-st/05.png (1496x1122)",
+    "web": "apps/web/public/images/cars/nissan-navara-st/05.webp (1168x880, cwebp -q 80)"
+  }
+}

@@ -194,4 +194,37 @@ export const STOCK_CARS: StockCarFixture[] = [
       { file: '08.webp', alt: 'White 2007 Mitsubishi Lancer ES sedan, cabin from the rear seat' },
     ],
   },
+  {
+    stockNo: 'SDA1004',
+    photoKey: 'nissan-navara-st',
+    make: 'Nissan',
+    model: 'Navara',
+    variant: 'ST',
+    // Photos only (2026-11-22): the dealer adds year, odometer, price, engine and the description from the
+    // admin dashboard. Fuel is unconfirmed (diesel assumed; the schema has no "unknown").
+    year: 0,
+    bodyType: 'ute',
+    transmission: 'automatic',
+    fuel: 'diesel',
+    engine: '',
+    colour: 'Silver',
+    km: 0,
+    price: 0,
+    status: 'available',
+    published: true,
+    daysListed: 0,
+    features: ['Dual cab', 'Sports bar with work lights', 'Soft tonneau cover', 'Bonnet protector', 'Side steps', 'Weather shields', 'Alloy wheels'],
+    description:
+      'A silver Nissan Navara ST dual-cab ute with an automatic gearbox, fitted with a sports bar, soft tonneau cover, ' +
+      'bonnet protector, side steps and weather shields. Call us for the full details or to arrange a test drive.',
+    photos: [
+      { file: '01.webp', alt: 'Silver Nissan Navara ST dual-cab ute with sports bar, front three-quarter view' },
+      { file: '02.webp', alt: 'Silver Nissan Navara ST dual-cab ute with bonnet protector, front view' },
+      { file: '03.webp', alt: 'Silver Nissan Navara ST dual-cab ute with sports bar and tonneau cover, rear three-quarter view' },
+      { file: '04.webp', alt: 'Silver Nissan Navara ST dual-cab ute with sports bar and work lights, rear three-quarter view from the driver side' },
+      { file: '05.webp', alt: 'Silver Nissan Navara ST dual-cab ute, dashboard, steering wheel and front seats' },
+      { file: '06.webp', alt: 'Silver Nissan Navara ST dual-cab ute, front seats from the passenger door' },
+      { file: '07.webp', alt: 'Silver Nissan Navara ST dual-cab ute, steering wheel and automatic gear lever' },
+    ],
+  },
 ];
